@@ -1,12 +1,10 @@
 'use client';
 
-// import Maerquee from 'react-marquee-slider';
 import { 
   FaApple, FaGoogle, FaMicrosoft, FaAmazon, FaFacebook, FaTwitter, FaGithub, FaLinkedin, 
   FaSlack, FaSpotify, FaDropbox, FaSalesforce, FaReddit, FaSnapchat, FaYoutube, FaTwitch 
 } from 'react-icons/fa';
 
-// import { v4 as uuidv4 } from 'uuid';
 
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
