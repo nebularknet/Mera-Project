@@ -18,8 +18,8 @@ function App() {
     <>
       <CustomNavbar />
       <Header/>
-      <Values/>
       <AboutUs/>
+      <Values/>
       <Services/>
       <Products/>
       <Footer/>

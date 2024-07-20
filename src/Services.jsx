@@ -51,14 +51,14 @@ const Services = () => {
   return (
     <div className="services-section" id='services'>
       <Container>
-        <Row className="text-center">
+        <Row className="text-center mb-4">
           <Col className="kudos-text">
             <h1 className="values-title">Our <span className='highlight'>Services</span></h1>
           </Col>
         </Row>
         <Row className="justify-content-center text-center mb-4">
           {tags.map((tag, index) => (
-            <Col key={index} xs={12} md={1} className="filter-button-col">
+            <Col key={index} xs={12} md={2} className="filter-button-col mb-2">
               <Button
                 className={`filter-button ${selectedTag === tag ? 'active' : ''}`}
                 onClick={() => setSelectedTag(tag)}
@@ -70,7 +70,7 @@ const Services = () => {
         </Row>
         <Row className="justify-content-center">
           {filteredServices.map((service, index) => (
-            <Col key={index} md={4}>
+            <Col key={index} md={4} className="mb-4"> {/* Add margin-bottom class */}
               <Card className="service-card">
                 <Card.Body>
                   <div className="service-icon">{service.icon}</div>
