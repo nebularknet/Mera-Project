@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import { FaFacebook, FaTwitter, FaInstagram, FaPinterest, FaWordpress } from 'react-icons/fa';
+import { Container, Row, Col, Card } from 'react-bootstrap';
+import { FaFacebook, FaTwitter, FaInstagram, FaPinterest, FaWordpress, FaYoutube, FaTiktok } from 'react-icons/fa';
 
 const Products = () => {
   const [selectedTag, setSelectedTag] = useState('All');
@@ -13,12 +13,13 @@ const Products = () => {
         wordpress: "https://alfatihah01.wordpress.com/",
         facebook: "https://www.facebook.com/alfatihah01",
         twitter: "https://twitter.com/AlFatihahTheKey",
-        instagram: "https://www.instagram.com/alfatihahthekey",
-        pinterest: "https://www.pinterest.com/al123fatihah/"
+        instagram: "https://www.instagram.com/alfatihahthekey/?hl=en",
+        pinterest: "https://www.pinterest.com/al123fatihah/",
+        youtube: "",
+        tiktok: ""
       },
       tags: ['All', 'Product']
     },
-    // 
     {
       name: "Noble Earth",
       image: "img/portfolio/noble-earth-logo-final.png",
@@ -27,7 +28,9 @@ const Products = () => {
         facebook: "https://www.facebook.com/TheNobleEarthofficial",
         twitter: "https://twitter.com/TheNoble_Earth",
         instagram: "https://www.instagram.com/thenobleearth/",
-        pinterest: "https://www.pinterest.com/thenobleearth"
+        pinterest: "https://www.pinterest.com/thenobleearth/",
+        youtube: "https://www.youtube.com/@TheNobleEarth",
+        tiktok: "https://www.tiktok.com/@thenobleearth"
       },
       tags: ['All', 'Product']
     },
@@ -39,7 +42,9 @@ const Products = () => {
         facebook: "https://www.facebook.com/Opportunity.Circle/",
         twitter: "https://twitter.com/OpportunityCir1",
         instagram: "https://www.instagram.com/opportunity_circle/",
-        pinterest: "https://www.pinterest.com/opportunitycircle/"
+        pinterest: "https://www.pinterest.com/opportunitycircle/",
+        youtube: "",
+        tiktok: ""
       },
       tags: ['All', 'Product']
     },
@@ -48,23 +53,26 @@ const Products = () => {
       image: "img/portfolio/hikayat-logo-final.png",
       links: {
         wordpress: "",
-        facebook: "https://www.facebook.com/Opportunity.Circle/",
-        twitter: "https://twitter.com/OpportunityCir1",
-        instagram: "https://www.instagram.com/opportunity_circle/",
-        pinterest: "https://www.pinterest.com/opportunitycircle/"
+        facebook: "https://www.facebook.com/profile.php?id=100088725561982",
+        twitter: "https://twitter.com/Hikayat_App",
+        instagram: "https://www.instagram.com/hikayat_app/",
+        pinterest: "https://www.pinterest.com/hikayatapp/",
+        youtube: "https://www.youtube.com/@Hikayat_app",
+        tiktok: ""
       },
       tags: ['All', 'Product']
-    }
-    ,
+    },
     {
       name: "Prism",
       image: "img/portfolio/prism-riddle-logo-final.png",
       links: {
         wordpress: "",
-        facebook: "https://www.facebook.com/Opportunity.Circle/",
-        twitter: "https://twitter.com/OpportunityCir1",
-        instagram: "https://www.instagram.com/opportunity_circle/",
-        pinterest: "https://www.pinterest.com/opportunitycircle/"
+        facebook: "",
+        twitter: "",
+        instagram: "",
+        pinterest: "",
+        youtube: "https://www.youtube.com/@PrismChallenges",
+        tiktok: ""
       },
       tags: ['All', 'Product']
     },
@@ -73,10 +81,12 @@ const Products = () => {
       image: "img/portfolio/today-chronicles-logo-final.png",
       links: {
         wordpress: "",
-        facebook: "https://www.facebook.com/Opportunity.Circle/",
-        twitter: "https://twitter.com/OpportunityCir1",
-        instagram: "https://www.instagram.com/opportunity_circle/",
-        pinterest: "https://www.pinterest.com/opportunitycircle/"
+        facebook: "",
+        twitter: "",
+        instagram: "",
+        pinterest: "",
+        youtube: "https://www.youtube.com/channel/UCGRoBc_BcxXiF-FL_kVGH8Q",
+        tiktok: ""
       },
       tags: ['All', 'Product']
     }
@@ -94,18 +104,7 @@ const Products = () => {
             <h1 className="values-title">Our <span className='highlight'>Products</span></h1>
           </Col>
         </Row>
-        {/* <Row className="justify-content-center text-center mb-4">
-          {tags.map((tag, index) => (
-            <Col key={index} xs={12} md={2} className="filter-button-col">
-              <Button
-                className={`filter-button ${selectedTag === tag ? 'active' : ''}`}
-                onClick={() => setSelectedTag(tag)}
-              >
-                {tag}
-              </Button>
-            </Col>
-          ))}
-        </Row> */}
+      
         <Row className="justify-content-center">
           {filteredProducts.map((product, index) => (
             <Col key={index} md={4}>
@@ -148,6 +147,20 @@ const Products = () => {
                           <li>
                             <a href={product.links.pinterest} target="_blank" rel="noopener noreferrer">
                               <FaPinterest className="fa" />
+                            </a>
+                          </li>
+                        )}
+                        {product.links.youtube && (
+                          <li>
+                            <a href={product.links.youtube} target="_blank" rel="noopener noreferrer">
+                              <FaYoutube className="fa" />
+                            </a>
+                          </li>
+                        )}
+                        {product.links.tiktok && (
+                          <li>
+                            <a href={product.links.tiktok} target="_blank" rel="noopener noreferrer">
+                              <FaTiktok className="fa" />
                             </a>
                           </li>
                         )}
