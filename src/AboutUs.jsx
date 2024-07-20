@@ -31,7 +31,7 @@ const AboutUs = () => {
               <Col md={6}>
                 <ul className="list-unstyled">
                   {aboutData.Why.map((item, index) => (
-                    <li key={index} className="d-flex align-items-center mb-2">
+                    <li key={index} className="d-flex align-items-center mb-2 mr-2">
                       <FaCircleArrowRight className="icon-custom" /> {item}
                     </li>
                   ))}
@@ -40,7 +40,7 @@ const AboutUs = () => {
               <Col md={6}>
                 <ul className="list-unstyled">
                   {aboutData.Why2.map((item, index) => (
-                    <li key={index} className="d-flex align-items-center mb-2">
+                    <li key={index} className="d-flex align-items-center mb-2 mr-2">
                       <FaCircleArrowRight className="icon-custom" /> {item}
                     </li>
                   ))}
@@ -50,7 +50,7 @@ const AboutUs = () => {
           </Col>
           <Col md={4} className="d-flex justify-content-center align-items-center">
             <Card className="bg-dark text-light">
-              <Card.Img src="./about-us-final.png" alt="Office Image" />
+              <Card.Img src="./about-us-final.png" alt="Office Image" className="centered-image"/>
             </Card>
           </Col>
         </Row>

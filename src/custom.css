@@ -50,7 +50,7 @@
 }
 
 .btn-custom:hover {
-  background-color: var(--pink-light);
+  background-color: var(--pink);
 }
 
 /* Repeat this pattern for other sections of your CSS */
@@ -127,7 +127,7 @@
   } */
   
   .btn-custom:hover {
-    background-color: var(--pink-light);;
+    background-color: var(--pink);
   }
   
   .create-account-link {
@@ -452,7 +452,7 @@
   }
   
   .kudos-button:hover {
-    background-color: var(--pink-light);;
+    background-color: var(--pink);;
   }
   
   .kudos-subtitle {
@@ -664,7 +664,6 @@
 
 
 
-
 /* Services Section */
 
 .services-section {
@@ -681,7 +680,6 @@
   background-color: rgba(255, 255, 255, 0.05);
   border: none;
   color: #ffffff;
-  margin: 15px; /* Add margin to create space between cards */
   position: relative;
   overflow: hidden;
   display: flex;
@@ -757,6 +755,24 @@
 .filter-button:focus {
   outline: none;
 }
+
+/* Button for loading more services */
+.more-button {
+  background-color: transparent;
+  border: 2px solid #0dcaf0; /* Blue border */
+  color: #0dcaf0; /* Blue text */
+  padding: 10px 30px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+  border-radius: 50px; /* Rounded corners */
+}
+
+.more-button:hover {
+  background-color: #0dcaf0; /* Blue background on hover */
+  color: #fff; /* White text on hover */
+}
+
 
 /* Portfolio Section */
 /* Products Section */
@@ -937,4 +953,33 @@
   display: -webkit-box;
   -webkit-line-clamp: 3; /* Change this value to the number of lines you want to show */
   -webkit-box-orient: vertical;
+}
+
+
+
+
+
+.icon-custom {
+  margin-right: 10px; /* Adjust the spacing as needed */
+  color: var(--pink); /* Adjust the color if needed */
+}
+
+
+
+
+
+
+
+
+
+.centered-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Ensure the card takes up the full height of its parent */
+}
+
+.centered-image {
+  max-height: 100%;
+  object-fit: cover; /* Ensure the image covers the container without stretching */
 }
