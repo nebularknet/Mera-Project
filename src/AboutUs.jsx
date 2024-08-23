@@ -21,12 +21,12 @@ const AboutUs = () => {
   return (
     <div id="about" className="benchmark-section">
       <Container className="text-light">
-        <Row className="py-5">
+        <Row className="py-2 py-md-3 py-lg-5">
           <Col md={8}>
             <h1 className='highlight'>About Us</h1>
             <hr className="bg-light" />
             <p>{aboutData.paragraph}</p>
-            <h3 className="highlight mt-4">Why Choose Us?</h3>
+            <h3 className="highlight mt-2 mt-md-4">Why Choose Us?</h3>
             <Row>
               <Col md={6}>
                 <ul className="list-unstyled">

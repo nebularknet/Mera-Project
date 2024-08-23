@@ -52,7 +52,7 @@ const Values = () => {
         </Row>
         <Row className="justify-content-center">
           {values.map((value, index) => (
-            <Col key={value._id} md={4} className="mb-4"> {/* Add margin-bottom class */}
+            <Col key={value._id} md={6} lg={4} className="mb-4"> {/* Add margin-bottom class */}
               <Card className="step-card">
                 <Card.Body>
                   <div className="step-icon">{value.icon}</div>

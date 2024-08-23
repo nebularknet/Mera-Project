@@ -74,14 +74,14 @@ const Services = () => {
   return (
     <div className="services-section" id='services'>
       <Container>
-        <Row className="text-center mb-4">
+        <Row className="text-center mb-md-4 mb-2">
           <Col className="kudos-text">
             <h1 className="values-title">Our <span className='highlight'>Services</span></h1>
           </Col>
         </Row>
-        <Row className="justify-content-center text-center mb-4">
+        <Row className="justify-content-center text-center mb-2 mb-md-4">
           {tags.map((tag, index) => (
-            <Col key={index} xs={12} md={2} className="filter-button-col mb-2">
+            <Col key={index} xs={12} md={4} lg={2} className="filter-button-col mb-2">
               <Button
                 className={`filter-button ${selectedTag === tag ? 'active' : ''}`}
                 onClick={() => setSelectedTag(tag)}
@@ -93,7 +93,7 @@ const Services = () => {
         </Row>
         <Row className="justify-content-center">
           {filteredServices.slice(0, visibleServices).map((service, index) => (
-            <Col key={index} md={4} className="mb-4"> {/* Add margin-bottom class */}
+            <Col key={index} md={6} lg={4} className="mb-4"> {/* Add margin-bottom class */}
               <Card className="service-card">
                 <Card.Body>
                   <div className="service-icon">{service.icon}</div>
@@ -105,7 +105,7 @@ const Services = () => {
           ))}
         </Row>
         {visibleServices < filteredServices.length && (
-          <Row className="justify-content-center">
+          <Row className="justify-content-center px-5 px-sm-3 px-lg-0 ">
             <Button className="more-button" onClick={handleLoadMore}>More</Button>
           </Row>
         )}

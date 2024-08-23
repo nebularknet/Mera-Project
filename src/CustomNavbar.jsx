@@ -6,7 +6,7 @@ import { Navbar, Nav, Button, Container } from 'react-bootstrap';
 const CustomNavbar = () => {
   return (
 
-    <Navbar fixed="top" className="navbar-custom" expand="lg">
+    <Navbar className="navbar-custom" expand="lg">
     <Container>
 
       <h3 href="#home" className="navbar-brand-custom">
