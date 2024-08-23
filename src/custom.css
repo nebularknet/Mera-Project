@@ -18,6 +18,7 @@
 .navbar-custom {
   background-color: var(--black);
   padding: 10px 20px;
+  position:fixed;
 }
 
 .navbar-brand-custom {
@@ -575,7 +576,7 @@
     text-align: center;
     text-transform: uppercase;
     background-color: #000;
-    font-size: 4.2em;
+    font-size: 67.2px;
     letter-spacing: 0.1em;
     z-index: 1;
   font-weight: bold;
@@ -982,4 +983,97 @@
 .centered-image {
   max-height: 100%;
   object-fit: cover; /* Ensure the image covers the container without stretching */
+}
+
+@media (min-width: 200px) and (max-width:424px) {
+  .main-title {font-size: 17px;}
+  .main-title .thin{font-size: 17px;}
+
+  .header-container { height: 270px;}
+
+  .navbar-custom {
+    background-color: var(--black); padding: 10px 20px; position:static;}
+  .highlight{font-size: 17px;}
+  p{font-size: 14px;}
+  li{font-size: 14px;}
+  h1,span{font-size: 17px;}
+
+ .benchmark-section { padding: 15px 0;}
+  
+ #values { padding: 25px 0;}
+
+ .step-card .step-icon { font-size: 2rem; width: 60px; height: 60px;}
+ .step-card .card-title { font-size: 16px; margin-top: 0px;}
+ .step-card .card-text { font-size: 12px; margin-top: 0px;}
+ .filter-button { font-size: 12px;}
+
+ .service-card .service-icon { font-size: 2rem; width: 60px; height: 60px;}
+ .service-card .card-title { font-size: 16px; margin-top: 0px;}
+ .service-card .card-text { font-size: 12px; margin-top: 0px;}
+
+ .services-section {padding: 15px 0;}
+
+ .more-button { padding: 5px 15px; margin-top: 10px; font-size: 12px;}
+}
+
+@media (min-width: 425px) and (max-width:767px) {
+  .main-title {font-size: 25px;}
+  .main-title .thin{font-size: 25px;}
+
+  .header-container { height: 350px;}
+
+  .navbar-custom {
+  padding: 15px 25px; position:static;}
+  .highlight{font-size: 25px;}
+  p{font-size: 16px;}
+  li{font-size: 16px;}
+  h1,span{font-size: 25px;}
+
+ .benchmark-section { padding: 25px 0;}
+  
+ #values { padding: 25px 0;}
+
+ .step-card .step-icon { font-size: 3rem; width: 80px; height: 80px;}
+ .step-card .card-title { font-size: 18px; margin-top: 10px;}
+ .step-card .card-text { font-size: 14px; margin-top: 10px;}
+ .filter-button { font-size: 14px;}
+
+ .service-card .service-icon { font-size: 3rem; width: 80px; height: 80px;}
+ .service-card .card-title { font-size: 18px; margin-top: 10px;}
+ .service-card .card-text { font-size: 14px; margin-top: 10px;}
+
+ .services-section {padding: 20px 0;}
+
+ .more-button { padding: 8px 20px; margin-top: 15px; font-size: 14px;}
+}
+
+@media (min-width: 768px) and (max-width:900px) {
+  .navbar-custom { padding: 10px 20px; position:static;}
+  
+  .main-title {font-size: 35px;}
+  
+  .main-title .thin{font-size: 35px;}
+  p{font-size: 18px;}
+
+  h1,span{font-size: 35px;}
+  
+  li{font-size: 18px;}
+
+  .benchmark-section { padding: 35px 0;}
+  
+  #values { padding: 35px 0;}
+
+  .step-card .step-icon { font-size: 3rem; width: 90px; height: 90px;}
+
+  .step-card .card-title { font-size: 20px; margin-top: 15x;}
+
+  .step-card .card-text { font-size: 16px; margin-top: 10px;}
+
+  .filter-button { font-size: 16px;}
+
+  .service-card .service-icon { font-size: 3rem; width: 90px; height: 90px;}
+ 
+  .service-card .card-title { font-size: 20px; margin-top: 15px;}
+ 
+  .service-card .card-text { font-size: 16px; margin-top: 15px;}
 }

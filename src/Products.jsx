@@ -107,7 +107,7 @@ const Products = () => {
       
         <Row className="justify-content-center">
           {filteredProducts.map((product, index) => (
-            <Col key={index} md={4}>
+            <Col key={index} md={6} xs={12} lg={4}>
               <Card className="product-card">
                 <div className="hover-bg">
                   <Card.Img variant="top" src={product.image} alt={product.name} />
