@@ -18,7 +18,7 @@
 .navbar-custom {
   background-color: var(--black);
   padding: 10px 20px;
-  position:fixed;
+  /* position:fixed; */
 }
 
 .navbar-brand-custom {

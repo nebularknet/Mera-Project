@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
-import { FaCode, FaPaintBrush, FaChartLine, FaEdit, FaShoppingCart, FaBtc, FaYoutube, FaRobot, FaShieldAlt } from 'react-icons/fa';
+import { FaCode, FaPaintBrush, FaChartLine, FaEdit, FaShoppingCart, FaBtc, FaYoutube,FaBrain,FaEye,FaFileAlt, FaRobot, FaShieldAlt } from 'react-icons/fa';
 
 const Services = () => {
   const [selectedTag, setSelectedTag] = useState('All');
@@ -12,6 +12,32 @@ const Services = () => {
       name: "Application Development",
       text: "Desktop, Web and Mobile Application Development",
       tags: ['Dev']
+    },
+  
+    {
+      icon: <FaRobot />,
+      name: "Artificial Intelligence",
+      text: "AI solutions for business automation and data analysis",
+      tags: ['AI']
+    },
+    // Add new AI-related services:
+    {
+      icon: <FaBrain />,
+      name: "Natural Language Processing",
+      text: "Text processing, resume parsing, sentiment analysis, and NLP model deployment",
+      tags: ['AI', 'NLP']
+    },
+    {
+      icon: <FaFileAlt />,
+      name: "Generative AI (GenAI)",
+      text: "AI-powered content generation, prompt engineering, and document automation",
+      tags: ['AI', 'GenAI']
+    },
+    {
+      icon: <FaEye />,
+      name: "Computer Vision",
+      text: "Image classification, object detection, video analytics, and OCR solutions",
+      tags: ['AI', 'Computer Vision']
     },
     {
       icon: <FaPaintBrush />,
@@ -37,12 +63,6 @@ const Services = () => {
       name: "YouTube Content Creation",
       text: "Creating engaging YouTube content and managing channels",
       tags: ['Content Creation']
-    },
-    {
-      icon: <FaRobot />,
-      name: "Artificial Intelligence",
-      text: "AI solutions for business automation and data analysis",
-      tags: ['AI']
     },
     {
       icon: <FaShieldAlt />,

@@ -26,8 +26,8 @@ const Footer = () => {
           <Col md={4} className="footer-contact">
             <h5>CONTACT</h5>
             <p><a href="mailto:nebulark.net@gmail.com">nebulark.net@gmail.com</a></p>
-            <p>Islamabad,Pakistan<br />
-              </p>
+            <p>Islamabad,Pakistan<br /></p>
+            <p>Phone: <a href="tel:+923432018677">+923432018677</a></p>
           </Col>
         </Row>
         <Row className="footer-bottom">
