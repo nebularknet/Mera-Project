@@ -1,11 +1,24 @@
-import React, { useCallback } from 'react';
-import Particles from '@tsparticles/react';
-import { loadLinksPreset } from '@tsparticles/preset-links';
+'use client';
+
+import React, { useCallback, useState, useEffect } from 'react';
 import { Container } from 'react-bootstrap';
 
 const Header = () => {
+  const [Particles, setParticles] = useState(null);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+    const loadParticles = async () => {
+      const { default: ParticlesComponent } = await import('@tsparticles/react');
+      setParticles(() => ParticlesComponent);
+    };
+    loadParticles();
+  }, []);
+
   const particlesInit = useCallback(async (engine) => {
     console.log("Initializing particles...");
+    const { loadLinksPreset } = await import('@tsparticles/preset-links');
     await loadLinksPreset(engine);
     console.log("Particles initialized");
   }, []);
@@ -16,80 +29,82 @@ const Header = () => {
 
   return (
     <div id='home' style={{ backgroundColor: '#000', minHeight: '100vh', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ 
-        position: 'absolute', 
-        top: 0, 
-        left: 0, 
-        width: '100%', 
-        height: '100%', 
-        zIndex: 0,
-        pointerEvents: 'none'
-      }}>
-        <Particles
-          id="tsparticles"
-          init={particlesInit}
-          loaded={particlesLoaded}
-          options={{
-            background: {
-              color: {
-                value: "#000",
+      {isClient && Particles && (
+        <div style={{ 
+          position: 'absolute', 
+          top: 0, 
+          left: 0, 
+          width: '100%', 
+          height: '100%', 
+          zIndex: 0,
+          pointerEvents: 'none'
+        }}>
+          <Particles
+            id="tsparticles"
+            init={particlesInit}
+            loaded={particlesLoaded}
+            options={{
+              background: {
+                color: {
+                  value: "#000",
+                },
               },
-            },
-            fullScreen: {
-              enable: false,
-            },
-            particles: {
-              number: {
-                value: 80,
+              fullScreen: {
+                enable: false,
               },
-              color: {
-                value: "#ffffff"
-              },
-              shape: {
-                type: "circle"
-              },
-              opacity: {
-                value: 1,
-              },
-              size: {
-                value: 4,
-              },
-              links: {
-                enable: true,
-                distance: 150,
-                color: "#ffffff",
-                opacity: 1,
-                width: 2
-              },
-              move: {
-                enable: true,
-                speed: 2,
-              }
-            },
-            interactivity: {
-              events: {
-                onHover: {
+              particles: {
+                number: {
+                  value: 80,
+                },
+                color: {
+                  value: "#ffffff"
+                },
+                shape: {
+                  type: "circle"
+                },
+                opacity: {
+                  value: 1,
+                },
+                size: {
+                  value: 4,
+                },
+                links: {
                   enable: true,
-                  mode: "repulse"
+                  distance: 150,
+                  color: "#ffffff",
+                  opacity: 1,
+                  width: 2
                 },
-                onClick: {
+                move: {
                   enable: true,
-                  mode: "push"
-                },
-              },
-              modes: {
-                repulse: {
-                  distance: 100,
-                  duration: 0.4
-                },
-                push: {
-                  quantity: 4
+                  speed: 2,
                 }
-              }
-            },
-          }}
-        />
-      </div>
+              },
+              interactivity: {
+                events: {
+                  onHover: {
+                    enable: true,
+                    mode: "repulse"
+                  },
+                  onClick: {
+                    enable: true,
+                    mode: "push"
+                  },
+                },
+                modes: {
+                  repulse: {
+                    distance: 100,
+                    duration: 0.4
+                  },
+                  push: {
+                    quantity: 4
+                  }
+                }
+              },
+            }}
+          />
+        </div>
+      )}
       <Container 
         className="header-container" 
         style={{ 
