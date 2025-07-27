@@ -1,40 +1,107 @@
-import React, { useState } from 'react';
-import Particles from 'react-tsparticles';
-import { loadLinksPreset } from 'tsparticles-preset-links';
+import React, { useCallback } from 'react';
+import Particles from '@tsparticles/react';
+import { loadLinksPreset } from '@tsparticles/preset-links';
 import { Container } from 'react-bootstrap';
 
 const Header = () => {
-  const [particlesLoaded, setParticlesLoaded] = useState(false);
+  const particlesInit = useCallback(async (engine) => {
+    console.log("Initializing particles...");
+    await loadLinksPreset(engine);
+    console.log("Particles initialized");
+  }, []);
 
-  const particlesInit = (main) => {
-    console.log(main);
-    loadLinksPreset(main);
-  };
-
-  const handleParticlesLoaded = (container) => {
-    console.log(container);
-    setParticlesLoaded(true);
-  };
+  const particlesLoaded = useCallback(async (container) => {
+    console.log("Particles loaded", container);
+  }, []);
 
   return (
-    <div id='home' style={{ backgroundColor: '#000', minHeight: '100vh' }}>
-      <Particles
-        id="tsparticles"
-        init={particlesInit}
-        loaded={handleParticlesLoaded}
-        options={{
-          preset: 'links',
-          background: {
-            color: {
-              value: '#000',
+    <div id='home' style={{ backgroundColor: '#000', minHeight: '100vh', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ 
+        position: 'absolute', 
+        top: 0, 
+        left: 0, 
+        width: '100%', 
+        height: '100%', 
+        zIndex: 0,
+        pointerEvents: 'none'
+      }}>
+        <Particles
+          id="tsparticles"
+          init={particlesInit}
+          loaded={particlesLoaded}
+          options={{
+            background: {
+              color: {
+                value: "#000",
+              },
             },
-          },
-          fullScreen: {
-            enable: false,
-          },
+            fullScreen: {
+              enable: false,
+            },
+            particles: {
+              number: {
+                value: 80,
+              },
+              color: {
+                value: "#ffffff"
+              },
+              shape: {
+                type: "circle"
+              },
+              opacity: {
+                value: 1,
+              },
+              size: {
+                value: 4,
+              },
+              links: {
+                enable: true,
+                distance: 150,
+                color: "#ffffff",
+                opacity: 1,
+                width: 2
+              },
+              move: {
+                enable: true,
+                speed: 2,
+              }
+            },
+            interactivity: {
+              events: {
+                onHover: {
+                  enable: true,
+                  mode: "repulse"
+                },
+                onClick: {
+                  enable: true,
+                  mode: "push"
+                },
+              },
+              modes: {
+                repulse: {
+                  distance: 100,
+                  duration: 0.4
+                },
+                push: {
+                  quantity: 4
+                }
+              }
+            },
+          }}
+        />
+      </div>
+      <Container 
+        className="header-container" 
+        style={{ 
+          position: 'relative', 
+          zIndex: 1, 
+          height: '100vh', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          pointerEvents: 'auto'
         }}
-      />
-      <Container className="header-container">
+      >
         <h1 className="main-title highlight">
           Nebulark
           <br />
