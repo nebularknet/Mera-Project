@@ -11,7 +11,8 @@
     "build": "next build",
     "postbuild": "cp .next/routes-manifest.json dist/routes-manifest.json 2>/dev/null || mkdir -p dist && cp .next/routes-manifest.json dist/routes-manifest.json && mkdir -p dist/api && cp -r .next/server/app/api/* dist/api/ 2>/dev/null || true && mkdir -p dist/rss && cp -r .next/server/app/rss/* dist/rss/ 2>/dev/null || true && mkdir -p dist/sitemap.xml && cp -r .next/server/app/sitemap.xml/* dist/sitemap.xml/ 2>/dev/null || true",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "vercel-build": "npm run build"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
