@@ -2,6 +2,9 @@ import { config } from "@/config";
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
 
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 const generateOpenGraphImage = async ({
   title,
   brandText,
