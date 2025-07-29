@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: undefined, // Ensure we're not using static export
   images: {
     remotePatterns: [
       {

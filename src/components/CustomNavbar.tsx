@@ -47,7 +47,7 @@ const CustomNavbar: React.FC = () => {
             </Nav.Link>
             <Nav.Link 
               href="/blog" 
-              className={`nav-link-custom ${pathname.startsWith('/blog') ? 'active' : ''}`}
+              className={`nav-link-custom ${pathname?.startsWith('/blog') ? 'active' : ''}`}
             >
               Blog
             </Nav.Link>

@@ -18,10 +18,10 @@ export interface BlogNavigationBarProps {
 export const FilterBar = ({ className, active }: BlogNavigationBarProps) => {
   const param = useSearchParams();
   const [searchText, setSearchText] = useState<string>(
-    param.get("query") || ""
+    param?.get("query") || ""
   );
   const [isSearchActive, setIsSearchActive] = useState(
-    param.get("query") !== null && param.get("query") !== ""
+    param?.get("query") !== null && param?.get("query") !== ""
   );
   const searchInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
@@ -50,7 +50,7 @@ export const FilterBar = ({ className, active }: BlogNavigationBarProps) => {
     setIsSearchActive(false);
     if (
       searchText === "" &&
-      !(param.get("query") === "" || param.get("query") === null)
+      !(param?.get("query") === "" || param?.get("query") === null)
     ) {
       router.push("/");
     }
