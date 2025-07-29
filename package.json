@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
+    "postbuild": "cp .next/routes-manifest.json dist/routes-manifest.json 2>/dev/null || mkdir -p dist && cp .next/routes-manifest.json dist/routes-manifest.json",
     "start": "next start",
     "lint": "next lint"
   },
