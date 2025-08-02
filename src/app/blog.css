@@ -1,0 +1,470 @@
+/* Blog-specific styling to match Nebulark theme */
+:root {
+  --nebulark-black: #000000;
+  --nebulark-white: #ffffff;
+  --nebulark-pink: #0dcaf0;
+  --nebulark-pink-light: #3d579f;
+  --nebulark-gray: #666666;
+  --nebulark-light-gray: #888888;
+  --nebulark-dark-gray: #333333;
+}
+
+/* Blog page styling */
+.blog-page {
+  background-color: var(--nebulark-black);
+  color: var(--nebulark-white);
+  min-height: 100vh;
+}
+
+/* Blog post list styling */
+.blog-post-card {
+  background-color: var(--nebulark-black);
+  border: 1px solid var(--nebulark-dark-gray);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.blog-post-card:hover {
+  border-color: var(--nebulark-pink);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(13, 202, 240, 0.2);
+}
+
+.blog-post-title {
+  color: var(--nebulark-white) !important;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.blog-post-title:hover {
+  color: var(--nebulark-pink) !important;
+}
+
+.blog-post-description {
+  color: var(--nebulark-light-gray) !important;
+  line-height: 1.6;
+}
+
+.blog-post-meta {
+  color: var(--nebulark-gray) !important;
+  font-size: 0.9rem;
+}
+
+/* Blog content styling */
+.blog-content {
+  background-color: var(--nebulark-black);
+  color: var(--nebulark-white);
+}
+
+.blog-content h1,
+.blog-content h2,
+.blog-content h3,
+.blog-content h4,
+.blog-content h5,
+.blog-content h6 {
+  color: var(--nebulark-white) !important;
+}
+
+.blog-content h1 {
+  color: var(--nebulark-pink) !important;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.blog-content h2 {
+  color: var(--nebulark-pink) !important;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.8rem;
+}
+
+.blog-content h3 {
+  color: var(--nebulark-pink) !important;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.6rem;
+}
+
+.blog-content p {
+  color: var(--nebulark-white) !important;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.blog-content a {
+  color: var(--nebulark-pink) !important;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.blog-content a:hover {
+  color: var(--nebulark-pink-light) !important;
+  text-decoration: underline;
+}
+
+.blog-content ul,
+.blog-content ol {
+  color: var(--nebulark-white) !important;
+  margin-bottom: 1rem;
+}
+
+.blog-content li {
+  color: var(--nebulark-white) !important;
+  margin-bottom: 0.5rem;
+}
+
+.blog-content blockquote {
+  border-left: 4px solid var(--nebulark-pink);
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: var(--nebulark-light-gray) !important;
+  font-style: italic;
+}
+
+.blog-content code {
+  background-color: var(--nebulark-dark-gray);
+  color: var(--nebulark-pink);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.blog-content pre {
+  background-color: var(--nebulark-dark-gray);
+  color: var(--nebulark-white);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.blog-content pre code {
+  background-color: transparent;
+  color: var(--nebulark-white);
+  padding: 0;
+}
+
+/* Header styling */
+.blog-header {
+  background-color: var(--nebulark-black);
+  color: var(--nebulark-white);
+  padding: 2rem 0;
+}
+
+.blog-header h1 {
+  color: var(--nebulark-pink) !important;
+  font-size: 3rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.blog-header p {
+  color: var(--nebulark-light-gray) !important;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+/* Breadcrumb styling */
+.blog-breadcrumb {
+  color: var(--nebulark-gray) !important;
+}
+
+.blog-breadcrumb a {
+  color: var(--nebulark-pink) !important;
+  text-decoration: none;
+}
+
+.blog-breadcrumb a:hover {
+  color: var(--nebulark-pink-light) !important;
+  text-decoration: underline;
+}
+
+/* Author info styling */
+.blog-author {
+  color: var(--nebulark-light-gray) !important;
+  font-size: 0.9rem;
+}
+
+.blog-author strong {
+  color: var(--nebulark-white) !important;
+}
+
+/* Table of contents styling */
+.blog-toc {
+  background-color: var(--nebulark-dark-gray);
+  border: 1px solid var(--nebulark-gray);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.blog-toc-title {
+  color: var(--nebulark-pink) !important;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.blog-toc a {
+  color: var(--nebulark-white) !important;
+  text-decoration: none;
+  display: block;
+  padding: 0.3rem 0;
+  transition: color 0.3s ease;
+}
+
+.blog-toc a:hover {
+  color: var(--nebulark-pink) !important;
+}
+
+/* Pagination styling */
+.blog-pagination {
+  background-color: var(--nebulark-black);
+  color: var(--nebulark-white);
+}
+
+.blog-pagination a {
+  color: var(--nebulark-pink) !important;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--nebulark-pink);
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.blog-pagination a:hover {
+  background-color: var(--nebulark-pink);
+  color: var(--nebulark-black) !important;
+}
+
+.blog-pagination .active {
+  background-color: var(--nebulark-pink);
+  color: var(--nebulark-black) !important;
+}
+
+/* Additional pagination component styling */
+.blog-pagination [data-radix-pagination-item] {
+  background-color: var(--nebulark-black);
+  color: var(--nebulark-white);
+}
+
+.blog-pagination [data-radix-pagination-link] {
+  color: var(--nebulark-pink) !important;
+  border: 1px solid var(--nebulark-pink);
+  background-color: transparent;
+  transition: all 0.3s ease;
+}
+
+.blog-pagination [data-radix-pagination-link]:hover {
+  background-color: var(--nebulark-pink);
+  color: var(--nebulark-black) !important;
+}
+
+.blog-pagination [data-radix-pagination-link][data-active="true"] {
+  background-color: var(--nebulark-pink);
+  color: var(--nebulark-black) !important;
+}
+
+/* Filter bar styling */
+.blog-filter {
+  background-color: var(--nebulark-black);
+  color: var(--nebulark-white);
+  border-bottom: 1px solid var(--nebulark-dark-gray);
+  padding: 1rem 0;
+}
+
+.blog-filter a {
+  color: var(--nebulark-gray) !important;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.blog-filter a:hover,
+.blog-filter a.active {
+  color: var(--nebulark-pink) !important;
+  background-color: rgba(13, 202, 240, 0.1);
+}
+
+/* Related posts styling */
+.blog-related {
+  background-color: var(--nebulark-black);
+  color: var(--nebulark-white);
+  padding: 2rem 0;
+  border-top: 1px solid var(--nebulark-dark-gray);
+}
+
+.blog-related h3 {
+  color: var(--nebulark-pink) !important;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.blog-related-card {
+  background-color: var(--nebulark-dark-gray);
+  border: 1px solid var(--nebulark-gray);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.blog-related-card:hover {
+  border-color: var(--nebulark-pink);
+  transform: translateY(-2px);
+}
+
+.blog-related-card h4 {
+  color: var(--nebulark-white) !important;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.blog-related-card p {
+  color: var(--nebulark-light-gray) !important;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Override Tailwind prose classes for blog content */
+.prose {
+  color: var(--nebulark-white) !important;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  color: var(--nebulark-pink) !important;
+}
+
+.prose p {
+  color: var(--nebulark-white) !important;
+}
+
+.prose a {
+  color: var(--nebulark-pink) !important;
+}
+
+.prose strong {
+  color: var(--nebulark-white) !important;
+}
+
+.prose em {
+  color: var(--nebulark-light-gray) !important;
+}
+
+.prose blockquote {
+  color: var(--nebulark-light-gray) !important;
+  border-left-color: var(--nebulark-pink) !important;
+}
+
+.prose code {
+  color: var(--nebulark-pink) !important;
+  background-color: var(--nebulark-dark-gray) !important;
+}
+
+.prose pre {
+  background-color: var(--nebulark-dark-gray) !important;
+  color: var(--nebulark-white) !important;
+}
+
+.prose pre code {
+  color: var(--nebulark-white) !important;
+  background-color: transparent !important;
+}
+
+/* Override text-muted-foreground for blog */
+.text-muted-foreground {
+  color: var(--nebulark-light-gray) !important;
+}
+
+/* Override text-primary for blog */
+.text-primary {
+  color: var(--nebulark-white) !important;
+}
+
+/* Override background colors */
+.bg-background {
+  background-color: var(--nebulark-black) !important;
+}
+
+.bg-card {
+  background-color: var(--nebulark-black) !important;
+}
+
+/* Override border colors */
+.border-border {
+  border-color: var(--nebulark-dark-gray) !important;
+}
+
+/* Form input styling for blog */
+.blog-content input,
+.blog-content textarea {
+  background-color: var(--nebulark-dark-gray) !important;
+  color: var(--nebulark-white) !important;
+  border: 1px solid var(--nebulark-gray) !important;
+  border-radius: 4px;
+  padding: 0.5rem;
+}
+
+.blog-content input:focus,
+.blog-content textarea:focus {
+  border-color: var(--nebulark-pink) !important;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(13, 202, 240, 0.2);
+}
+
+.blog-content input::placeholder,
+.blog-content textarea::placeholder {
+  color: var(--nebulark-light-gray) !important;
+}
+
+/* Button styling for blog */
+.blog-content button,
+.blog-pagination a {
+  background-color: transparent;
+  color: var(--nebulark-pink);
+  border: 1px solid var(--nebulark-pink);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.blog-content button:hover,
+.blog-pagination a:hover {
+  background-color: var(--nebulark-pink);
+  color: var(--nebulark-black);
+}
+
+.blog-content button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Alert styling for blog */
+.blog-content .alert {
+  background-color: var(--nebulark-dark-gray);
+  border: 1px solid var(--nebulark-gray);
+  color: var(--nebulark-white);
+}
+
+/* Checkbox styling for blog */
+.blog-content [data-radix-checkbox] {
+  background-color: var(--nebulark-dark-gray);
+  border: 1px solid var(--nebulark-gray);
+  color: var(--nebulark-pink);
+}
+
+.blog-content [data-radix-checkbox][data-state="checked"] {
+  background-color: var(--nebulark-pink);
+  border-color: var(--nebulark-pink);
+} 
