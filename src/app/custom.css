@@ -106,6 +106,21 @@ body {
   top: 0 !important;
   left: 0 !important;
   z-index: 1 !important;
+  pointer-events: none !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+#tsparticles canvas {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 .main-title {
@@ -559,9 +574,9 @@ section.bg-light {
   .main-title .thin {
     font-size: 17px !important;
   }
-  .header-container {
+  /* .header-container {
     height: 270px !important;
-  }
+  } */
   .navbar-custom {
     padding: 10px 20px !important;
   }
@@ -607,9 +622,9 @@ section.bg-light {
   .main-title .thin {
     font-size: 25px !important;
   }
-  .header-container {
+  /* .header-container {
     height: 350px !important;
-  }
+  } */
   .navbar-custom {
     padding: 15px 25px !important;
   }
