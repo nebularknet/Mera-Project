@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useState, useEffect, useRef } from 'react';
+import React, {  useState, useEffect, useRef } from 'react';
 import { Container } from 'react-bootstrap';
 
 const Header = () => {
