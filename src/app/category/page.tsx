@@ -10,10 +10,10 @@ import { getOgImageUrl } from "@/lib/ogImage";
 
 export const metadata: Metadata = {
   title: `Blog post categories`,
-  description: `List of all categories on ${config.organization}`,
+  description: `List of all categories on ${config.main.title}`,
   openGraph: {
     title: `Blog post categories`,
-    description: `List of all blog post categories on ${config.organization}`,
+    description: `List of all blog post categories on ${config.main.title}`,
     images: [getOgImageUrl(`Blog Post Categories`)],
   },
 };

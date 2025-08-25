@@ -9,7 +9,31 @@ const nextConfig = {
     ],
   },
   redirects: async () => {
-    return [];
+    return [
+      // Only redirect from main domain to subdomains (avoid conflicts with middleware)
+      {
+        source: '/academy',
+        destination: 'https://academy.nebulark.net',
+        permanent: true,
+        has: [
+          {
+            type: 'host',
+            value: 'nebulark.net',
+          },
+        ],
+      },
+      {
+        source: '/studio',
+        destination: 'https://studio.nebulark.net',
+        permanent: true,
+        has: [
+          {
+            type: 'host',
+            value: 'nebulark.net',
+          },
+        ],
+      },
+    ];
   },
   serverExternalPackages: ['@tsparticles/react', '@tsparticles/preset-links', 'react-icons'],
   webpack: (config: any, { isServer }: { isServer: boolean }) => {

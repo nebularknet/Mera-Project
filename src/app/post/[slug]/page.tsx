@@ -72,11 +72,11 @@ export default async function BlogPost(
     },
     publisher: {
       "@type": "Organization",
-      name: config.organization,
+      name: config.main.title,
       url: config.baseUrl,
       logo: {
         "@type": "ImageObject",
-        url: config.logoUrl,
+        url: `${config.baseUrl}/logo.png`,
       },
     },
   };

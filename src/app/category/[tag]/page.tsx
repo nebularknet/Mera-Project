@@ -22,10 +22,10 @@ export async function generateMetadata(
 
   return {
     title: `Blog posts tagged with #${tag}`,
-    description: `List of all blog posts on ${config.organization} tagged with #${tag}`,
+    description: `List of all blog posts on ${config.main.title} tagged with #${tag}`,
     openGraph: {
       title: `Blog posts tagged with #${tag}`,
-      description: `List of all blog posts on ${config.organization} tagged with #${tag}`,
+      description: `List of all blog posts on ${config.main.title} tagged with #${tag}`,
       images: [getOgImageUrl(`#${tag}`)],
     },
   };

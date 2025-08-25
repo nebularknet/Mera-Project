@@ -7,7 +7,7 @@ import { FilterBar } from "../../components/FilterBar";
 import { FullWidthHeader } from "../../components/FullWidthHeader";
 import { config } from "../../config";
 
-const { title, description } = config;
+const { title, description } = config.main;
 
 export const metadata: Metadata = {
   title: `${title} - Blog`,

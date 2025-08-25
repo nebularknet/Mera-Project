@@ -23,8 +23,8 @@ export async function GET() {
   });
 
   const feed = new RSS({
-    title: config.title,
-    description: config.description,
+    title: config.main.title,
+    description: config.main.description,
     site_url: baseUrl,
     feed_url: urlJoin(baseUrl, "/rss"),
     pubDate: new Date(),

@@ -1,7 +1,7 @@
 import { config } from "@/config";
 import urlJoin from "url-join";
 
-export const getOgImageUrl = (title: string, brandText = config.organization) => {
+export const getOgImageUrl = (title: string, brandText = config.main.title) => {
   return urlJoin(
     config.baseUrl,
     `api/og-image?title=${encodeURIComponent(title)}&brand=${encodeURIComponent(
