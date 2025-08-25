@@ -8,33 +8,7 @@ const nextConfig = {
       },
     ],
   },
-  redirects: async () => {
-    return [
-      // Only redirect from main domain to subdomains (avoid conflicts with middleware)
-      {
-        source: '/academy',
-        destination: 'https://academy.nebulark.net',
-        permanent: true,
-        has: [
-          {
-            type: 'host',
-            value: 'nebulark.net',
-          },
-        ],
-      },
-      {
-        source: '/studio',
-        destination: 'https://studio.nebulark.net',
-        permanent: true,
-        has: [
-          {
-            type: 'host',
-            value: 'nebulark.net',
-          },
-        ],
-      },
-    ];
-  },
+  // Redirects are now handled in middleware.ts for better performance
   serverExternalPackages: ['@tsparticles/react', '@tsparticles/preset-links', 'react-icons'],
   webpack: (config: any, { isServer }: { isServer: boolean }) => {
     if (!isServer) {

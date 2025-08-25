@@ -31,6 +31,18 @@ export function middleware(request: NextRequest) {
     }
   }
   
+  // Handle redirects from main domain to subdomains
+  if (hostname === 'nebulark.net' || hostname === 'www.nebulark.net') {
+    if (pathname === '/studio') {
+      console.log('Redirecting /studio to studio.nebulark.net');
+      return NextResponse.redirect(new URL('https://studio.nebulark.net', request.url));
+    }
+    if (pathname === '/academy') {
+      console.log('Redirecting /academy to academy.nebulark.net');
+      return NextResponse.redirect(new URL('https://academy.nebulark.net', request.url));
+    }
+  }
+  
   return NextResponse.next();
 }
 
