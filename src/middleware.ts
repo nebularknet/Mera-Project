@@ -11,6 +11,12 @@ export function middleware(request: NextRequest) {
   console.log('Headers host:', request.headers.get('host'));
   console.log('NextUrl hostname:', request.nextUrl.hostname);
   
+  // Test route for debugging
+  if (pathname === '/test-subdomain') {
+    console.log('🧪 Test subdomain route accessed');
+    return NextResponse.next();
+  }
+  
   // Handle subdomain routing with more specific checks
   if (hostname && (hostname.startsWith('academy.') || hostname.includes('academy.'))) {
     console.log('✅ Academy subdomain detected - rewriting to /academy');
