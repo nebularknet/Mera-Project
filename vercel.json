@@ -2,18 +2,6 @@
   "framework": "nextjs",
   "buildCommand": "npm run build",
   "installCommand": "npm install --legacy-peer-deps",
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "has": [{ "type": "host", "value": "studio.nebulark.net" }],
-      "destination": "/studio"
-    },
-    {
-      "source": "/(.*)",
-      "has": [{ "type": "host", "value": "academy.nebulark.net" }],
-      "destination": "/academy"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
