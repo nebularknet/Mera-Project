@@ -4,33 +4,41 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const hostname = request.headers.get('host') || request.nextUrl.hostname;
   
-  console.log('Middleware - Host:', hostname, 'Path:', pathname);
+  console.log('=== MIDDLEWARE DEBUG ===');
+  console.log('Host:', hostname);
+  console.log('Pathname:', pathname);
+  console.log('Full URL:', request.url);
+  console.log('Headers host:', request.headers.get('host'));
+  console.log('NextUrl hostname:', request.nextUrl.hostname);
   
-  // Handle subdomain routing
-  if (hostname.includes('academy.')) {
-    console.log('Academy subdomain detected');
-    // Always rewrite academy subdomain to academy page
-    return NextResponse.rewrite(new URL(`/academy${pathname}`, request.url));
+  // Handle subdomain routing with more specific checks
+  if (hostname && (hostname.startsWith('academy.') || hostname.includes('academy.'))) {
+    console.log('✅ Academy subdomain detected - rewriting to /academy');
+    const rewriteUrl = new URL(`/academy${pathname}`, request.url);
+    console.log('Rewrite URL:', rewriteUrl.toString());
+    return NextResponse.rewrite(rewriteUrl);
   }
   
-  if (hostname.includes('studio.')) {
-    console.log('Studio subdomain detected');
-    // Always rewrite studio subdomain to studio page
-    return NextResponse.rewrite(new URL(`/studio${pathname}`, request.url));
+  if (hostname && (hostname.startsWith('studio.') || hostname.includes('studio.'))) {
+    console.log('✅ Studio subdomain detected - rewriting to /studio');
+    const rewriteUrl = new URL(`/studio${pathname}`, request.url);
+    console.log('Rewrite URL:', rewriteUrl.toString());
+    return NextResponse.rewrite(rewriteUrl);
   }
   
   // Handle redirects from main domain to subdomains
   if (hostname === 'nebulark.net' || hostname === 'www.nebulark.net') {
     if (pathname === '/studio') {
-      console.log('Redirecting /studio to studio.nebulark.net');
+      console.log('🔄 Redirecting /studio to studio.nebulark.net');
       return NextResponse.redirect(new URL('https://studio.nebulark.net', request.url));
     }
     if (pathname === '/academy') {
-      console.log('Redirecting /academy to academy.nebulark.net');
+      console.log('🔄 Redirecting /academy to academy.nebulark.net');
       return NextResponse.redirect(new URL('https://academy.nebulark.net', request.url));
     }
   }
   
+  console.log('➡️ No subdomain match - continuing to main site');
   return NextResponse.next();
 }
 
