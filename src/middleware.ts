@@ -8,28 +8,16 @@ export function middleware(request: NextRequest) {
   console.log('Host:', hostname);
   console.log('Pathname:', pathname);
   console.log('Full URL:', request.url);
-  console.log('Headers host:', request.headers.get('host'));
-  console.log('NextUrl hostname:', request.nextUrl.hostname);
   
-  // Test route for debugging
-  if (pathname === '/test-subdomain') {
-    console.log('🧪 Test subdomain route accessed');
-    return NextResponse.next();
-  }
-  
-  // Handle subdomain routing with more specific checks
+  // Handle subdomain routing with redirects
   if (hostname && (hostname.startsWith('academy.') || hostname.includes('academy.'))) {
-    console.log('✅ Academy subdomain detected - rewriting to /academy');
-    const rewriteUrl = new URL(`/academy${pathname}`, request.url);
-    console.log('Rewrite URL:', rewriteUrl.toString());
-    return NextResponse.rewrite(rewriteUrl);
+    console.log('✅ Academy subdomain detected - redirecting to /academy');
+    return NextResponse.redirect(new URL(`/academy${pathname}`, request.url));
   }
   
   if (hostname && (hostname.startsWith('studio.') || hostname.includes('studio.'))) {
-    console.log('✅ Studio subdomain detected - rewriting to /studio');
-    const rewriteUrl = new URL(`/studio${pathname}`, request.url);
-    console.log('Rewrite URL:', rewriteUrl.toString());
-    return NextResponse.rewrite(rewriteUrl);
+    console.log('✅ Studio subdomain detected - redirecting to /studio');
+    return NextResponse.redirect(new URL(`/studio${pathname}`, request.url));
   }
   
   // Handle redirects from main domain to subdomains

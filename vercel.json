@@ -2,6 +2,20 @@
   "framework": "nextjs",
   "buildCommand": "npm run build",
   "installCommand": "npm install --legacy-peer-deps",
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "studio.nebulark.net" }],
+      "destination": "https://nebulark.net/studio",
+      "statusCode": 301
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "academy.nebulark.net" }],
+      "destination": "https://nebulark.net/academy",
+      "statusCode": 301
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
