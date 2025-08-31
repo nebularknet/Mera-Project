@@ -75,14 +75,16 @@
 
 /* Header Section - Fixed */
 .header-container {
-  height: 100vh !important;
+  height: 60vh !important;
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
   background-color: var(--black) !important;
   position: relative !important;
-  margin-top: 0 !important;
-  padding-top: 80px !important;
+  margin: 20vh auto 20vh auto !important;
+  padding-top: 40px !important;
+  border-radius: 10px !important;
+  max-width: 90vw !important;
 }
 
 #tsparticles {
@@ -159,7 +161,10 @@ footer {
     font-size: 17px;
   }
   .header-container {
-    height: 270px;
+    height: 40vh;
+    padding-top: 20px;
+    margin: 15vh auto 15vh auto;
+    max-width: 95vw;
   }
   .highlight {
     font-size: 17px;
@@ -186,7 +191,10 @@ footer {
     font-size: 25px;
   }
   .header-container {
-    height: 350px;
+    height: 50vh;
+    padding-top: 30px;
+    margin: 17vh auto 17vh auto;
+    max-width: 92vw;
   }
   .highlight {
     font-size: 25px;

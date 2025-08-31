@@ -556,11 +556,15 @@
   /* Header Section */
 
   .header-container {
-    height: 50vh;
+    height: 60vh;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #000;
+    padding-top: 40px;
+    margin: 20vh auto 20vh auto;
+    border-radius: 10px;
+    max-width: 90vw;
   }
   
   #tsparticles {
