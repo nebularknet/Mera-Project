@@ -46,6 +46,18 @@ const CustomNavbar: React.FC = () => {
               Products
             </Nav.Link>
             <Nav.Link 
+              href="/studio" 
+              className={`nav-link-custom ${pathname?.startsWith('/studio') ? 'active' : ''}`}
+            >
+              Studio
+            </Nav.Link>
+            <Nav.Link 
+              href="/academy" 
+              className={`nav-link-custom ${pathname?.startsWith('/academy') ? 'active' : ''}`}
+            >
+              Academy
+            </Nav.Link>
+            <Nav.Link 
               href="/blog" 
               className={`nav-link-custom ${pathname?.startsWith('/blog') ? 'active' : ''}`}
             >
