@@ -6,6 +6,10 @@ import { usePathname } from 'next/navigation';
 const CustomNavbar: React.FC = () => {
   const pathname = usePathname();
 
+  // The careers admin dashboard is a standalone internal tool — hide the
+  // marketing navbar there so it doesn't overlap the dashboard chrome.
+  if (pathname?.startsWith("/careers/admin")) return null;
+
   return (
     <Navbar className="navbar-custom" expand="lg">
       <Container className="align-items-center">
