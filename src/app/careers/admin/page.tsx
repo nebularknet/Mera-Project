@@ -5,7 +5,6 @@ import { Briefcase, Users, Clock, CheckCircle2, XCircle } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import { getAdminEmail } from "@/lib/auth/session";
-import { getOpenJobs } from "@/lib/careers/jobs";
 import {
   getApplications,
   getApplicationCounts,

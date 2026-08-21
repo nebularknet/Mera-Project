@@ -67,6 +67,12 @@ const CustomNavbar: React.FC = () => {
             >
               Blog
             </Nav.Link>
+            <Nav.Link 
+              href="/jobs" 
+              className={`nav-link-custom ${pathname?.startsWith('/jobs') ? 'active' : ''}`}
+            >
+              Careers
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
