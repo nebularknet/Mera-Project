@@ -10,6 +10,7 @@ const nextConfig = {
   },
   // Redirects are now handled in middleware.ts for better performance
   serverExternalPackages: ['@tsparticles/react', '@tsparticles/preset-links', 'react-icons'],
+  turbopack: {},
   webpack: (config: any, { isServer }: { isServer: boolean }) => {
     if (!isServer) {
       config.resolve.fallback = {
