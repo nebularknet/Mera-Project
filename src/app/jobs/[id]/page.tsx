@@ -3,7 +3,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, MapPin, Briefcase, DollarSign, Calendar, Clock, Star } from "lucide-react";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { JobApplyForm } from "./apply-form";
 import Footer from "@/components/Footer";
 
 import { Job } from "@/lib/jobs/types";
@@ -149,14 +148,7 @@ export default async function JobDetailsPage({ params }: PageProps) {
                 </div>
               </div>
 
-              <div>
-                <a
-                  href="#apply-form-section"
-                  className="more-button m-0 px-8 py-3 inline-flex items-center justify-center font-bold text-center w-full lg:w-auto"
-                >
-                  Apply Now
-                </a>
-              </div>
+
             </div>
           </div>
 
@@ -258,14 +250,12 @@ export default async function JobDetailsPage({ params }: PageProps) {
               </div>
 
               {/* Job Apply Form */}
-              {job.status === "Open" ? (
-                <JobApplyForm jobId={job.id} jobTitle={job.title} />
-              ) : (
-                <div className="rounded-xl border border-red-500/10 bg-red-500/[0.02] p-6 text-center">
-                  <p className="text-red-400 font-semibold mb-1">Applications Closed</p>
-                  <p className="text-xs text-white/50">This position is no longer accepting submissions. Thank you for your interest!</p>
-                </div>
-              )}
+              <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 text-center">
+                <p className="text-white/80 font-semibold mb-1">Applications Closed</p>
+                <p className="text-xs text-white/50">
+                  We are not accepting applications for this position at the moment. Thank you for your interest!
+                </p>
+              </div>
             </div>
           </div>
         </div>
