@@ -2,84 +2,33 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, MapPin, Briefcase, DollarSign, Calendar, Clock, Star } from "lucide-react";
-import { createAdminClient } from "@/lib/supabase/admin";
 import Footer from "@/components/Footer";
-
-import { Job } from "@/lib/jobs/types";
-import { MOCK_JOBS } from "@/lib/jobs/mockData";
+import { getJobById } from "@/lib/jobs/queries";
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const resolvedParams = await params;
-  const id = resolvedParams.id;
-  const supabase = createAdminClient();
-
-  let job: { title: string; department: string } | null = null;
-  const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.trim() === "";
-
-  if (supabase && !isPlaceholder) {
-    try {
-      const { data } = await supabase
-        .from("jobs")
-        .select("title, department")
-        .eq("id", id)
-        .maybeSingle();
-      if (data) job = data;
-    } catch (e) {
-      console.warn("[generateMetadata] failed to query job, checking mock data:", e);
-    }
-  }
+  const { id } = await params;
+  const job = await getJobById(id).catch(() => null);
 
   if (!job) {
-    const mock = MOCK_JOBS.find((j) => j.id === id);
-    if (mock) {
-      job = { title: mock.title, department: mock.department };
-    }
+    return { title: "Job Not Found — Nebulark" };
   }
 
-  if (!job) {
-    return {
-      title: "Job Not Found — Nebulark",
-    };
-  }
-
+  const where = job.department ? ` in the ${job.department} department` : "";
   return {
-    title: `${job.title} — ${job.department} — Nebulark`,
-    description: `Apply for the ${job.title} position in the ${job.department} department at Nebulark.`,
+    title: job.department ? `${job.title} — ${job.department} — Nebulark` : `${job.title} — Nebulark`,
+    description: `Apply for the ${job.title} position${where} at Nebulark.`,
   };
 }
 
 export const dynamic = "force-dynamic";
 
 export default async function JobDetailsPage({ params }: PageProps) {
-  const resolvedParams = await params;
-  const id = resolvedParams.id;
-
-  const supabase = createAdminClient();
-  let job: Job | null = null;
-  const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.trim() === "";
-
-  if (supabase && !isPlaceholder) {
-    try {
-      const { data, error } = await supabase
-        .from("jobs")
-        .select("*")
-        .eq("id", id)
-        .maybeSingle();
-      if (!error && data) {
-        job = data as Job;
-      }
-    } catch (err) {
-      console.warn("[JobDetailsPage] Supabase query failed, checking mock data:", err);
-    }
-  }
-
-  if (!job) {
-    job = MOCK_JOBS.find((j) => j.id === id) ?? null;
-  }
+  const { id } = await params;
+  const job = await getJobById(id);
 
   if (!job) {
     return notFound();
@@ -104,9 +53,11 @@ export default async function JobDetailsPage({ params }: PageProps) {
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
               <div>
                 <div className="flex items-center gap-2.5 mb-3 flex-wrap">
-                  <span className="rounded bg-[#0dcaf0]/10 px-2.5 py-1 text-xs font-semibold text-[#0dcaf0]">
-                    {job.department}
-                  </span>
+                  {job.department && (
+                    <span className="rounded bg-[#0dcaf0]/10 px-2.5 py-1 text-xs font-semibold text-[#0dcaf0]">
+                      {job.department}
+                    </span>
+                  )}
                   {job.featured && (
                     <span className="rounded bg-[#0dcaf0]/20 px-2.5 py-1 text-xs font-semibold text-[#0dcaf0] flex items-center gap-1">
                       <Star size={12} fill="currentColor" /> Featured
@@ -129,22 +80,30 @@ export default async function JobDetailsPage({ params }: PageProps) {
 
                 {/* Job Meta Info */}
                 <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/65 text-left">
-                  <span className="flex items-center gap-1.5">
-                    <MapPin size={16} className="text-[#0dcaf0]" />
-                    {job.location}
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <Briefcase size={16} className="text-[#0dcaf0]" />
-                    {job.employment_type}
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <DollarSign size={16} className="text-[#0dcaf0]" />
-                    {job.salary}
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <Clock size={16} className="text-[#0dcaf0]" />
-                    {job.experience}
-                  </span>
+                  {job.location && (
+                    <span className="flex items-center gap-1.5">
+                      <MapPin size={16} className="text-[#0dcaf0]" />
+                      {job.location}
+                    </span>
+                  )}
+                  {job.employment_type && (
+                    <span className="flex items-center gap-1.5">
+                      <Briefcase size={16} className="text-[#0dcaf0]" />
+                      {job.employment_type}
+                    </span>
+                  )}
+                  {job.salary && (
+                    <span className="flex items-center gap-1.5">
+                      <DollarSign size={16} className="text-[#0dcaf0]" />
+                      {job.salary}
+                    </span>
+                  )}
+                  {job.experience && (
+                    <span className="flex items-center gap-1.5">
+                      <Clock size={16} className="text-[#0dcaf0]" />
+                      {job.experience}
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -215,26 +174,36 @@ export default async function JobDetailsPage({ params }: PageProps) {
               <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 text-left">
                 <h4 className="text-lg font-bold text-white mb-4">Role Overview</h4>
                 <div className="space-y-3.5 text-sm">
-                  <div className="flex justify-between py-2 border-b border-white/5">
-                    <span className="text-white/50">Department</span>
-                    <span className="text-white font-medium">{job.department}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-white/5">
-                    <span className="text-white/50">Location</span>
-                    <span className="text-white font-medium">{job.location}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-white/5">
-                    <span className="text-white/50">Employment Type</span>
-                    <span className="text-white font-medium">{job.employment_type}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-white/5">
-                    <span className="text-white/50">Experience</span>
-                    <span className="text-white font-medium">{job.experience}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-white/5">
-                    <span className="text-white/50">Salary Range</span>
-                    <span className="text-white font-medium">{job.salary}</span>
-                  </div>
+                  {job.department && (
+                    <div className="flex justify-between py-2 border-b border-white/5">
+                      <span className="text-white/50">Department</span>
+                      <span className="text-white font-medium">{job.department}</span>
+                    </div>
+                  )}
+                  {job.location && (
+                    <div className="flex justify-between py-2 border-b border-white/5">
+                      <span className="text-white/50">Location</span>
+                      <span className="text-white font-medium">{job.location}</span>
+                    </div>
+                  )}
+                  {job.employment_type && (
+                    <div className="flex justify-between py-2 border-b border-white/5">
+                      <span className="text-white/50">Employment Type</span>
+                      <span className="text-white font-medium">{job.employment_type}</span>
+                    </div>
+                  )}
+                  {job.experience && (
+                    <div className="flex justify-between py-2 border-b border-white/5">
+                      <span className="text-white/50">Experience</span>
+                      <span className="text-white font-medium">{job.experience}</span>
+                    </div>
+                  )}
+                  {job.salary && (
+                    <div className="flex justify-between py-2 border-b border-white/5">
+                      <span className="text-white/50">Salary Range</span>
+                      <span className="text-white font-medium">{job.salary}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between py-2">
                     <span className="text-white/50">Posted Date</span>
                     <span className="text-white font-medium flex items-center gap-1">

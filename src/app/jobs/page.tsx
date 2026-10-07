@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { MapPin, Briefcase, Calendar, DollarSign, ArrowRight } from "lucide-react";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { JobsFilters } from "./jobs-filters";
 import { RoleIcon } from "../careers/role-icon";
 import Footer from "@/components/Footer";
+import type { Job } from "@/lib/jobs/types";
+import { getAllJobs } from "@/lib/jobs/queries";
 
 export const metadata: Metadata = {
   title: "Careers — Nebulark",
@@ -24,125 +25,37 @@ interface PageProps {
   }>;
 }
 
-import { Job } from "@/lib/jobs/types";
-import { MOCK_JOBS } from "@/lib/jobs/mockData";
+const distinct = (values: string[]) => Array.from(new Set(values.filter(Boolean))).sort();
 
 export default async function JobsPage({ searchParams }: PageProps) {
   const resolvedParams = await searchParams;
-  const supabase = createAdminClient();
 
-  let jobsList: Job[] = [];
-  let departments: string[] = [];
-  let locations: string[] = [];
-  let employmentTypes: string[] = [];
+  let allJobs: Job[] = [];
+  let loadFailed = false;
+  try {
+    allJobs = await getAllJobs();
+  } catch (err) {
+    console.error("[JobsPage]", err);
+    loadFailed = true;
+  }
 
-  const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.trim() === "";
-  let useMock = isPlaceholder;
+  // Filter options come from ALL jobs so users always see every choice.
+  const departments = distinct(allJobs.map((j) => j.department));
+  const locations = distinct(allJobs.map((j) => j.location));
+  const employmentTypes = distinct(allJobs.map((j) => j.employment_type));
 
-  if (supabase && !isPlaceholder) {
-    try {
-      // 1. Fetch all distinct values for filters from ALL jobs (so users always see all options)
-      const { data: allJobsData, error: allJobsError } = await supabase
-        .from("jobs")
-        .select("department, location, employment_type");
-
-      if (allJobsError) {
-        console.warn("[JobsPage] Supabase filter query failed:", allJobsError.message);
-        useMock = true;
-      } else {
-        departments = Array.from(new Set((allJobsData ?? []).map((j) => j.department))).filter(Boolean);
-        locations = Array.from(new Set((allJobsData ?? []).map((j) => j.location))).filter(Boolean);
-        employmentTypes = Array.from(new Set((allJobsData ?? []).map((j) => j.employment_type))).filter(Boolean);
-
-        // 2. Query jobs matching search parameters
-        let query = supabase.from("jobs").select("*").order("created_at", { ascending: false });
-
-        // Filter: Open roles only (defaults to true)
-        if (resolvedParams.openOnly !== "false") {
-          query = query.eq("status", "Open");
-        }
-
-        // Filter: Featured
-        if (resolvedParams.featured === "true") {
-          query = query.eq("featured", true);
-        }
-
-        // Filter: Department
-        if (resolvedParams.department) {
-          query = query.eq("department", resolvedParams.department);
-        }
-
-        // Filter: Location
-        if (resolvedParams.location) {
-          query = query.eq("location", resolvedParams.location);
-        }
-
-        // Filter: Employment Type
-        if (resolvedParams.employmentType) {
-          query = query.eq("employment_type", resolvedParams.employmentType);
-        }
-
-        // Filter: Search Term (title or description)
-        if (resolvedParams.search) {
-          const searchVal = resolvedParams.search.trim();
-          query = query.or(`title.ilike.%${searchVal}%,description.ilike.%${searchVal}%`);
-        }
-
-        const { data: jobs, error: fetchErr } = await query;
-
-        if (fetchErr) {
-          console.warn("[JobsPage] Supabase jobs query failed:", fetchErr.message);
-          useMock = true;
-        } else {
-          jobsList = (jobs ?? []) as Job[];
-        }
-      }
-    } catch (err) {
-      console.warn("[JobsPage] Supabase query failed, falling back to mock data:", err);
-      useMock = true;
+  const term = resolvedParams.search?.toLowerCase().trim();
+  const jobsList = allJobs.filter((job) => {
+    if (resolvedParams.openOnly !== "false" && job.status !== "Open") return false;
+    if (resolvedParams.featured === "true" && !job.featured) return false;
+    if (resolvedParams.department && job.department !== resolvedParams.department) return false;
+    if (resolvedParams.location && job.location !== resolvedParams.location) return false;
+    if (resolvedParams.employmentType && job.employment_type !== resolvedParams.employmentType) return false;
+    if (term && !job.title.toLowerCase().includes(term) && !job.description.toLowerCase().includes(term)) {
+      return false;
     }
-  }
-
-  if (useMock) {
-    // Generate filter lists from all mock jobs
-    departments = Array.from(new Set(MOCK_JOBS.map((j) => j.department))).filter(Boolean);
-    locations = Array.from(new Set(MOCK_JOBS.map((j) => j.location))).filter(Boolean);
-    employmentTypes = Array.from(new Set(MOCK_JOBS.map((j) => j.employment_type))).filter(Boolean);
-
-    // Apply memory filters on mock data
-    jobsList = MOCK_JOBS.filter((job) => {
-      // Open roles only (defaults to true)
-      if (resolvedParams.openOnly !== "false" && job.status !== "Open") {
-        return false;
-      }
-      // Featured
-      if (resolvedParams.featured === "true" && !job.featured) {
-        return false;
-      }
-      // Department
-      if (resolvedParams.department && job.department !== resolvedParams.department) {
-        return false;
-      }
-      // Location
-      if (resolvedParams.location && job.location !== resolvedParams.location) {
-        return false;
-      }
-      // Employment Type
-      if (resolvedParams.employmentType && job.employment_type !== resolvedParams.employmentType) {
-        return false;
-      }
-      // Search
-      if (resolvedParams.search) {
-        const term = resolvedParams.search.toLowerCase().trim();
-        const inTitle = job.title.toLowerCase().includes(term);
-        const inDesc = job.description.toLowerCase().includes(term);
-        if (!inTitle && !inDesc) {
-          return false;
-        }
-      }
-      return true;
-    });
-  }
+    return true;
+  });
 
   return (
     <>
@@ -169,7 +82,14 @@ export default async function JobsPage({ searchParams }: PageProps) {
             />
 
             {/* Job Grid / List */}
-            {jobsList.length > 0 ? (
+            {loadFailed ? (
+              <div className="text-center py-16 border border-white/10 rounded-lg bg-white/[0.02]">
+                <h3 className="text-lg font-semibold text-white mb-2">Open positions are unavailable right now</h3>
+                <p className="text-white/60 max-w-md mx-auto text-sm">
+                  We couldn&apos;t load our job listings. Please try again in a few minutes.
+                </p>
+              </div>
+            ) : jobsList.length > 0 ? (
               <div className="row justify-content-center">
                 {jobsList.map((job) => (
                   <div key={job.id} className="col-md-6 col-lg-4 mb-4">
@@ -195,18 +115,24 @@ export default async function JobsPage({ searchParams }: PageProps) {
 
                           {/* Job Meta */}
                           <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-white/60 mb-4 text-left">
-                            <span className="flex items-center gap-1.5">
-                              <MapPin size={14} className="text-[#0dcaf0]" />
-                              {job.location}
-                            </span>
-                            <span className="flex items-center gap-1.5">
-                              <Briefcase size={14} className="text-[#0dcaf0]" />
-                              {job.employment_type}
-                            </span>
-                            <span className="flex items-center gap-1.5">
-                              <DollarSign size={14} className="text-[#0dcaf0]" />
-                              {job.salary}
-                            </span>
+                            {job.location && (
+                              <span className="flex items-center gap-1.5">
+                                <MapPin size={14} className="text-[#0dcaf0]" />
+                                {job.location}
+                              </span>
+                            )}
+                            {job.employment_type && (
+                              <span className="flex items-center gap-1.5">
+                                <Briefcase size={14} className="text-[#0dcaf0]" />
+                                {job.employment_type}
+                              </span>
+                            )}
+                            {job.salary && (
+                              <span className="flex items-center gap-1.5">
+                                <DollarSign size={14} className="text-[#0dcaf0]" />
+                                {job.salary}
+                              </span>
+                            )}
                           </div>
 
                           {/* Short Description */}

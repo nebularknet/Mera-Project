@@ -8,9 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
  * logged-in reviewers back to the login page.
  *
  * Returns the response (with refreshed cookies) so the caller can hand it back
- * from middleware. Subdomain routing in src/middleware.ts runs first and short-
- * circuits with its own redirect when it matches, so this only runs for the
- * main site (which includes /careers/admin).
+ * from the proxy (src/proxy.ts).
  */
 export async function updateSession(request: NextRequest): Promise<NextResponse> {
   let response = NextResponse.next({ request });

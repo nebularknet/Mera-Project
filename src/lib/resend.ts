@@ -1,7 +1,15 @@
 import "server-only";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Created lazily: the Resend constructor throws when RESEND_API_KEY is unset,
+// which would break every module that imports this one. Without a key, emails
+// are skipped (logged) instead.
+let client: Resend | null = null;
+function getClient() {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) return null;
+  return (client ??= new Resend(key));
+}
 
 const FROM = process.env.CAREERS_FROM_EMAIL || "onboarding@resend.dev";
 const NOTIFY = process.env.CAREERS_NOTIFY_EMAIL;
@@ -18,6 +26,11 @@ type SendArgs = {
  * logged and swallowed; the caller decides whether email delivery is critical.
  */
 async function sendEmail({ to, subject, html }: SendArgs) {
+  const resend = getClient();
+  if (!resend) {
+    console.warn(`[resend] RESEND_API_KEY not set — skipped email: ${subject}`);
+    return { ok: false as const, error: "RESEND_API_KEY not set" };
+  }
   try {
     const { error } = await resend.emails.send({ from: FROM, to, subject, html });
     if (error) {
