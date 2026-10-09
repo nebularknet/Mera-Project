@@ -1,6 +1,7 @@
 import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Job } from "./types";
+import { applyFallback } from "./fallback";
 
 /**
  * The live `jobs` table uses the original careers schema
@@ -28,7 +29,7 @@ function normalize(row: JobRow): Job {
         ? "Closed"
         : "Open";
 
-  return {
+  return applyFallback({
     id: row.id,
     title: row.title,
     department: text(row.department),
@@ -44,7 +45,7 @@ function normalize(row: JobRow): Job {
     status,
     created_at: row.created_at,
     updated_at: text(row.updated_at) || row.created_at,
-  };
+  });
 }
 
 /** All jobs, newest first. Throws if Supabase is unreachable or misconfigured. */

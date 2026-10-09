@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, MapPin, Briefcase, DollarSign, Calendar, Clock, Star } from "lucide-react";
 import Footer from "@/components/Footer";
 import { getJobById } from "@/lib/jobs/queries";
+import { JobApplyButton } from "./apply-button";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -218,12 +219,21 @@ export default async function JobDetailsPage({ params }: PageProps) {
                 </div>
               </div>
 
-              {/* Job Apply Form */}
+              {/* Apply */}
               <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 text-center">
-                <p className="text-white/80 font-semibold mb-1">Applications Closed</p>
-                <p className="text-xs text-white/50">
-                  We are not accepting applications for this position at the moment. Thank you for your interest!
-                </p>
+                {job.status === "Open" ? (
+                  <>
+                    <p className="text-white/80 font-semibold mb-3">Interested in this role?</p>
+                    <JobApplyButton jobId={job.id} jobTitle={job.title} />
+                  </>
+                ) : (
+                  <>
+                    <p className="text-white/80 font-semibold mb-1">Applications Closed</p>
+                    <p className="text-xs text-white/50">
+                      We are not accepting applications for this position at the moment. Thank you for your interest!
+                    </p>
+                  </>
+                )}
               </div>
             </div>
           </div>
