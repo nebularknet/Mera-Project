@@ -10,7 +10,7 @@ import { signIn } from "./actions";
 const fieldCls =
   "border-white/10 bg-[#121212] text-white placeholder:text-white/40 focus-visible:ring-[#0dcaf0]/50";
 
-export function LoginForm() {
+export function LoginForm({ next }: { next?: string }) {
   const [error, setError] = React.useState<string | null>(null);
   const [pending, setPending] = React.useState(false);
 
@@ -26,6 +26,7 @@ export function LoginForm() {
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
+      {next && <input type="hidden" name="next" value={next} />}
       <div className="space-y-1.5">
         <label htmlFor="email" className="text-sm text-white">
           Email

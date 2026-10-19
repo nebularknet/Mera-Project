@@ -17,6 +17,7 @@ export type Application = {
   experience: string | null;
   cv_path: string;
   status: ApplicationStatus;
+  interview_at: string | null;
   created_at: string;
   job_title: string | null;
 };
@@ -36,8 +37,9 @@ export type ApplicationFilters = {
 
 /**
  * Reads applications for the admin dashboard via the service-role client
- * (applications has no public RLS policy). Joins the job title and applies
- * optional filters. Newest first.
+ * (applications has no public RLS policy). Only applications for roles that
+ * are switched on in "Manage roles" are returned (inner join on open jobs).
+ * Applies optional filters. Newest first.
  */
 export async function getApplications(
   filters: ApplicationFilters = {}
@@ -46,7 +48,8 @@ export async function getApplications(
 
   let query = supabase
     .from("applications")
-    .select("*, jobs(title)")
+    .select("*, jobs!inner(title, is_open)")
+    .eq("jobs.is_open", true)
     .order("created_at", { ascending: false });
 
   if (filters.jobId) query = query.eq("job_id", filters.jobId);
@@ -77,18 +80,19 @@ export async function getApplications(
     const { jobs, ...rest } = row as Record<string, unknown> & {
       jobs?: { title: string } | null;
     };
-    return { ...(rest as Omit<Application, "job_title">), job_title: jobs?.title ?? null };
+    const app = rest as Omit<Application, "job_title">;
+    // interview_at is absent until the migration runs; normalize to null.
+    return { ...app, interview_at: app.interview_at ?? null, job_title: jobs?.title ?? null };
   });
 }
 
 /** Counts grouped by status, for the dashboard summary cards. */
-export async function getApplicationCounts(): Promise<{
+export function countByStatus(apps: Pick<Application, "status">[]): {
   total: number;
   pending: number;
   shortlisted: number;
   rejected: number;
-}> {
-  const apps = await getApplications();
+} {
   return {
     total: apps.length,
     pending: apps.filter((a) => a.status === "pending").length,
@@ -108,7 +112,8 @@ export async function getFilterFacets(): Promise<{
   const supabase = createAdminClient();
   const { data, error } = await supabase
     .from("applications")
-    .select("city, university");
+    .select("city, university, jobs!inner(is_open)")
+    .eq("jobs.is_open", true);
   if (error || !data) return { cities: [], universities: [] };
   const cities = Array.from(new Set(data.map((r) => r.city).filter(Boolean))).sort();
   const universities = Array.from(

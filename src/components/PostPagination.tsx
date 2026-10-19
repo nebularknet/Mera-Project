@@ -12,39 +12,41 @@ import { cn } from "@/lib/utils";
 const constructPath = ({
   basePath,
   page,
-  query,
+  params,
 }: {
   basePath: string;
-  page?: string;
-  query?: string;
+  page: number;
+  params: Record<string, string | undefined>;
 }) => {
   const searchParams = new URLSearchParams();
-  if (page) searchParams.append("page", page);
-  if (query) searchParams.append("query", query);
-  return `${basePath}?${searchParams.toString()}`;
+  if (page > 1) searchParams.append("page", String(page));
+  for (const [k, v] of Object.entries(params)) if (v) searchParams.append(k, v);
+  const qs = searchParams.toString();
+  return qs ? `${basePath}?${qs}` : basePath;
 };
 
 export const PostPagination = ({
   pagination,
-  basePath = "/",
+  basePath = "/blog",
   query,
+  tag,
   numSiblingPages = 2,
   className,
 }: {
   className?: string;
   basePath?: string;
   query?: string;
+  tag?: string;
   numSiblingPages?: number;
   pagination: {
     page: number;
-    limit: number | "all";
     totalPages: number;
     nextPage: number | null;
     prevPage: number | null;
   };
 }) => {
-  const buildPath = (page: number) =>
-    constructPath({ basePath, page: page.toString(), query });
+  if (pagination.totalPages <= 1) return null;
+  const buildPath = (page: number) => constructPath({ basePath, page, params: { query, tag } });
   return (
     <Pagination className={cn("overflow-x-auto", className)}>
       <PaginationContent>
@@ -53,36 +55,28 @@ export const PostPagination = ({
             <PaginationPrevious href={buildPath(pagination.prevPage)} />
           </PaginationItem>
         )}
-        {pagination.page > 3 && (
+        {pagination.page > numSiblingPages + 1 && (
           <>
             <PaginationItem>
               <PaginationLink href={buildPath(1)}>1</PaginationLink>
             </PaginationItem>
-            <PaginationEllipsis />
+            {pagination.page > numSiblingPages + 2 && <PaginationEllipsis />}
           </>
         )}
         {Array.from({ length: pagination.totalPages }, (_, index) => index + 1)
-          .filter(
-            (pageNumber) =>
-              Math.abs(pagination.page - pageNumber) <= numSiblingPages
-          )
+          .filter((pageNumber) => Math.abs(pagination.page - pageNumber) <= numSiblingPages)
           .map((pageNumber) => (
             <PaginationItem key={pageNumber}>
-              <PaginationLink
-                href={buildPath(pageNumber)}
-                isActive={pageNumber === pagination.page}
-              >
+              <PaginationLink href={buildPath(pageNumber)} isActive={pageNumber === pagination.page}>
                 {pageNumber}
               </PaginationLink>
             </PaginationItem>
           ))}
-        {pagination.page < pagination.totalPages - 2 && (
+        {pagination.page < pagination.totalPages - numSiblingPages && (
           <>
-            <PaginationEllipsis />
+            {pagination.page < pagination.totalPages - numSiblingPages - 1 && <PaginationEllipsis />}
             <PaginationItem>
-              <PaginationLink href={buildPath(pagination.totalPages)}>
-                {pagination.totalPages}
-              </PaginationLink>
+              <PaginationLink href={buildPath(pagination.totalPages)}>{pagination.totalPages}</PaginationLink>
             </PaginationItem>
           </>
         )}

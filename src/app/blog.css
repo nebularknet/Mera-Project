@@ -224,13 +224,39 @@
   color: var(--nebulark-white);
 }
 
+.blog-pagination ul {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+/* Same height for page numbers and Previous/Next; text buttons grow with padding. */
 .blog-pagination a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  height: 2.5rem;
+  min-width: 2.5rem;
+  width: auto;
+  padding: 0 0.875rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
   color: var(--nebulark-pink) !important;
   text-decoration: none;
-  padding: 0.5rem 1rem;
   border: 1px solid var(--nebulark-pink);
   border-radius: 4px;
   transition: all 0.3s ease;
+}
+
+.blog-pagination a svg {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
 }
 
 .blog-pagination a:hover {
@@ -426,8 +452,8 @@
 }
 
 /* Button styling for blog */
-.blog-content button,
-.blog-pagination a {
+/* Pagination links are styled in the "Pagination styling" block above. */
+.blog-content button {
   background-color: transparent;
   color: var(--nebulark-pink);
   border: 1px solid var(--nebulark-pink);
@@ -468,3 +494,80 @@
   background-color: var(--nebulark-pink);
   border-color: var(--nebulark-pink);
 } 
+/* ---------------------------------------------------------------------------
+   Our own blog: article body (public page + preview) and the dashboard editor
+   --------------------------------------------------------------------------- */
+.blog-post-body h2,
+.blog-post-body h3,
+.blog-post-body h4,
+.blog-editor-content h2,
+.blog-editor-content h3,
+.blog-editor-content h4 {
+  color: var(--nebulark-white) !important;
+  font-weight: 700;
+  scroll-margin-top: 110px;
+}
+
+.blog-post-body p,
+.blog-post-body li,
+.blog-editor-content p,
+.blog-editor-content li {
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+
+.blog-post-body a,
+.blog-editor-content a {
+  color: var(--nebulark-pink) !important;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.blog-post-body img,
+.blog-editor-content img {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.blog-editor-content img.ProseMirror-selectednode {
+  outline: 3px solid var(--nebulark-pink);
+}
+
+/* YouTube embeds: responsive 16:9 */
+.blog-post-body div[data-youtube-video],
+.blog-editor-content div[data-youtube-video] {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin: 2em 0;
+}
+
+.blog-post-body div[data-youtube-video] iframe,
+.blog-editor-content div[data-youtube-video] iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 12px;
+}
+
+.blog-post-body hr,
+.blog-editor-content hr {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Editor placeholder (Tiptap) */
+.blog-editor-content p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Blog dashboard: Bootstrap underlines every link; the dashboard styles its own. */
+.blog-admin a {
+  text-decoration: none;
+}

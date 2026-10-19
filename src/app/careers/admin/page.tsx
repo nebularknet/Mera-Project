@@ -7,7 +7,7 @@ import type { LucideIcon } from "lucide-react";
 import { getAdminEmail } from "@/lib/auth/session";
 import {
   getApplications,
-  getApplicationCounts,
+  countByStatus,
   getFilterFacets,
   type ApplicationFilters,
 } from "@/lib/careers/applications";
@@ -57,18 +57,21 @@ export default async function AdminDashboard({
     search: pick(sp.search),
   };
 
-  // All jobs (open and closed) for the role filter.
+  // Only roles switched on in "Manage roles" appear on the dashboard.
   const supabase = createAdminClient();
   const { data: allJobs } = await supabase
     .from("jobs")
     .select("id, title")
+    .eq("is_open", true)
     .order("created_at", { ascending: false });
 
-  const [applications, counts, facets] = await Promise.all([
+  const [applications, facets] = await Promise.all([
     getApplications(filters),
-    getApplicationCounts(),
     getFilterFacets(),
   ]);
+
+  // Summary cards reflect the current filters.
+  const counts = countByStatus(applications);
 
   return (
     <main style={{ backgroundColor: "#000000", minHeight: "100vh" }}>
@@ -94,14 +97,6 @@ export default async function AdminDashboard({
       </header>
 
       <div className="w-full px-6 py-8 lg:px-10">
-        {/* Summary cards */}
-        <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <StatCard label="Total" value={counts.total} icon={Users} accent="#ffffff" />
-          <StatCard label="Pending" value={counts.pending} icon={Clock} accent="#facc15" />
-          <StatCard label="Shortlisted" value={counts.shortlisted} icon={CheckCircle2} accent="#0dcaf0" />
-          <StatCard label="Rejected" value={counts.rejected} icon={XCircle} accent="#f87171" />
-        </div>
-
         {/* Filters */}
         <div className="mb-5 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4">
           <FiltersBar
@@ -109,6 +104,14 @@ export default async function AdminDashboard({
             cities={facets.cities}
             universities={facets.universities}
           />
+        </div>
+
+        {/* Summary cards (for the filtered results) */}
+        <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <StatCard label="Total" value={counts.total} icon={Users} accent="#ffffff" />
+          <StatCard label="Pending" value={counts.pending} icon={Clock} accent="#facc15" />
+          <StatCard label="Shortlisted" value={counts.shortlisted} icon={CheckCircle2} accent="#0dcaf0" />
+          <StatCard label="Rejected" value={counts.rejected} icon={XCircle} accent="#f87171" />
         </div>
 
         {/* Result count */}

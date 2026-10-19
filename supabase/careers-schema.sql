@@ -15,6 +15,7 @@ create table if not exists public.jobs (
   description text,
   location    text,
   is_open     boolean not null default true,
+  last_date   date,            -- last day to apply (Pakistan time); null = no deadline
   created_at  timestamptz not null default now()
 );
 
@@ -35,6 +36,7 @@ create table if not exists public.applications (
   cv_path     text not null,   -- path inside the private "cvs" Storage bucket
   status      text not null default 'pending'
               check (status in ('pending', 'shortlisted', 'rejected')),
+  interview_at timestamptz,    -- set when shortlisted
   created_at  timestamptz not null default now()
 );
 

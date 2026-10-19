@@ -1,8 +1,14 @@
 "use server";
 
 import { randomUUID } from "crypto";
+import { z } from "zod";
 import { createAdminClient, CV_BUCKET } from "@/lib/supabase/admin";
-import { applicationSchema, cvFileSchema } from "@/lib/careers/schema";
+import {
+  applicationSchema,
+  cvFileSchema,
+  type ApplicationStatus,
+} from "@/lib/careers/schema";
+import { isPastLastDate } from "@/lib/careers/dates";
 import {
   emailApplicationReceived,
   emailTeamNewApplication,
@@ -47,13 +53,14 @@ export async function submitApplication(formData: FormData): Promise<SubmitResul
 
   const supabase = createAdminClient();
 
-  // 3. Confirm the selected job exists and is open.
+  // 3. Confirm the selected job exists, is open, and its last date hasn't passed.
+  //    `*` so this keeps working before the last_date column is added.
   const { data: job, error: jobErr } = await supabase
     .from("jobs")
-    .select("id, title, is_open")
+    .select("*")
     .eq("id", input.jobId)
     .maybeSingle();
-  if (jobErr || !job || !job.is_open) {
+  if (jobErr || !job || !job.is_open || isPastLastDate(job.last_date)) {
     return { ok: false, error: "That position is no longer accepting applications." };
   }
 
@@ -98,4 +105,78 @@ export async function submitApplication(formData: FormData): Promise<SubmitResul
   ]);
 
   return { ok: true };
+}
+
+export type StatusResult =
+  | {
+      ok: true;
+      status: ApplicationStatus;
+      appliedAt: string;
+      interviewAt: string | null;
+      jobTitle: string;
+    }
+  | { ok: false; error: string };
+
+const statusLookupSchema = z.object({
+  email: z.string().trim().email("Enter a valid email address."),
+  jobId: z.string().uuid({ message: "Please select the role you applied for." }),
+});
+
+/**
+ * Public status lookup by email + role. Only roles currently on the portal
+ * (is_open) can be checked; applications for removed roles are never returned.
+ * Returns the minimum the applicant needs — no other personal details.
+ */
+export async function checkApplicationStatus(formData: FormData): Promise<StatusResult> {
+  const parsed = statusLookupSchema.safeParse({
+    email: formData.get("email"),
+    jobId: formData.get("jobId"),
+  });
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.issues[0]?.message ?? "Invalid details." };
+  }
+  const { email, jobId } = parsed.data;
+
+  const supabase = createAdminClient();
+
+  const { data: job } = await supabase
+    .from("jobs")
+    .select("id, title, is_open")
+    .eq("id", jobId)
+    .maybeSingle();
+  if (!job || !job.is_open) {
+    return { ok: false, error: "This role is no longer listed, so its status can't be checked." };
+  }
+
+  // Case-insensitive exact match; escape LIKE wildcards in the address.
+  const pattern = email.replace(/[\\%_]/g, (c) => `\\${c}`);
+  const { data: rows, error } = await supabase
+    .from("applications")
+    .select("*")
+    .eq("job_id", jobId)
+    .ilike("email", pattern)
+    .order("created_at", { ascending: false })
+    .limit(1);
+  if (error) {
+    console.error("[checkApplicationStatus] failed:", error);
+    return { ok: false, error: "Couldn't check your status right now. Please try again." };
+  }
+
+  const app = rows?.[0] as
+    | { status: ApplicationStatus; created_at: string; interview_at?: string | null }
+    | undefined;
+  if (!app) {
+    return {
+      ok: false,
+      error: "We couldn't find an application with that email for this role.",
+    };
+  }
+
+  return {
+    ok: true,
+    status: app.status,
+    appliedAt: app.created_at,
+    interviewAt: app.status === "shortlisted" ? (app.interview_at ?? null) : null,
+    jobTitle: job.title as string,
+  };
 }

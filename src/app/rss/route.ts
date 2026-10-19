@@ -1,41 +1,32 @@
 export const dynamic = "force-dynamic";
-export const revalidate = 3600; // 1 hour
 export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
 import RSS from "rss";
-import urlJoin from "url-join";
-import { wisp } from "../../lib/wisp";
-import { config } from "@/config";
 
-const baseUrl = config.baseUrl;
+import { getAllPublishedForFeeds } from "@/lib/blog/queries";
+import { BLOG, postUrl } from "@/lib/blog/site";
 
 export async function GET() {
-  const result = await wisp.getPosts({ limit: 20 });
-
-  const posts = result.posts.map((post) => {
-    return {
-      title: post.title,
-      description: post.description || "",
-      url: urlJoin(baseUrl, `/post/${post.slug}`),
-      date: post.publishedAt || new Date(),
-    };
-  });
+  const posts = await getAllPublishedForFeeds(20);
 
   const feed = new RSS({
-    title: config.main.title,
-    description: config.main.description,
-    site_url: baseUrl,
-    feed_url: urlJoin(baseUrl, "/rss"),
-    pubDate: new Date(),
+    title: BLOG.title,
+    description: BLOG.description,
+    site_url: `${BLOG.baseUrl}/blog`,
+    feed_url: `${BLOG.baseUrl}/rss`,
+    pubDate: posts[0]?.published_at ? new Date(posts[0].published_at) : new Date(),
   });
-  posts.forEach((post) => {
-    feed.item(post);
-  });
+  for (const post of posts) {
+    feed.item({
+      title: post.title,
+      description: post.excerpt ?? "",
+      url: postUrl(post.slug),
+      date: post.published_at ? new Date(post.published_at) : new Date(post.updated_at),
+    });
+  }
 
-  const xml: string = feed.xml({ indent: true });
-
-  return new NextResponse(xml, {
+  return new NextResponse(feed.xml({ indent: true }), {
     headers: {
       "Content-Type": "application/rss+xml",
       "Access-Control-Allow-Origin": "*",

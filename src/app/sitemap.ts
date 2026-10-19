@@ -1,35 +1,45 @@
 export const dynamic = "force-dynamic";
-export const revalidate = 360; // 1 hour
 
 import type { MetadataRoute } from "next";
-import urlJoin from "url-join";
-import { wisp } from "../lib/wisp";
-import { config } from "@/config";
+
+import { getAllPublishedForFeeds, getCategories } from "@/lib/blog/queries";
+import { BLOG, postUrl } from "@/lib/blog/site";
+import { getAllJobs } from "@/lib/jobs/queries";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const postsResult = await wisp.getPosts({
-    limit: "all",
-  });
-  const tagsResult = await wisp.getTags();
+  const base = BLOG.baseUrl;
+  const [posts, categories, jobs] = await Promise.all([
+    getAllPublishedForFeeds(),
+    getCategories(),
+    getAllJobs().catch(() => []),
+  ]);
+
+  const pages = ["", "/studio", "/academy", "/services", "/blog", "/category", "/careers"];
+
   return [
-    {
-      url: config.baseUrl,
+    ...pages.map((p) => ({
+      url: `${base}${p}`,
       lastModified: new Date(),
-      priority: 1,
-    },
-    ...postsResult.posts.map((post) => {
-      return {
-        url: urlJoin(config.baseUrl, "post", post.slug),
-        lastModified: new Date(post.updatedAt),
-        priority: 0.8,
-      };
-    }),
-    ...tagsResult.tags.map((tag) => {
-      return {
-        url: urlJoin(config.baseUrl, "category", tag.id),
+      priority: p === "" ? 1 : 0.7,
+    })),
+    ...posts.map((post) => ({
+      url: postUrl(post.slug),
+      lastModified: new Date(post.updated_at),
+      priority: 0.8,
+    })),
+    ...categories
+      .filter((c) => c.postCount > 0)
+      .map((c) => ({
+        url: `${base}/category/${c.slug}`,
         lastModified: new Date(),
         priority: 0.5,
-      };
-    }),
+      })),
+    ...jobs
+      .filter((j) => j.status === "Open")
+      .map((j) => ({
+        url: `${base}/careers/${j.id}`,
+        lastModified: new Date(j.updated_at),
+        priority: 0.6,
+      })),
   ];
 }

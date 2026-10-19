@@ -21,7 +21,7 @@ export default async function ManageJobsPage() {
   const [{ data: jobs }, { data: apps }] = await Promise.all([
     supabase
       .from("jobs")
-      .select("id, title, location, description, is_open")
+      .select("*")
       .order("created_at", { ascending: false }),
     supabase.from("applications").select("job_id"),
   ]);
@@ -32,7 +32,13 @@ export default async function ManageJobsPage() {
   }
 
   const rows = (jobs ?? []).map((j) => ({
-    ...j,
+    id: j.id as string,
+    title: j.title as string,
+    location: (j.location as string | null) ?? null,
+    description: (j.description as string | null) ?? null,
+    is_open: Boolean(j.is_open),
+    // Absent until the migration adds the column.
+    last_date: (j.last_date as string | null | undefined) ?? null,
     applicationCount: countByJob.get(j.id) ?? 0,
   }));
 
@@ -49,7 +55,8 @@ export default async function ManageJobsPage() {
           Manage <span style={{ color: "#0dcaf0" }}>Roles</span>
         </h1>
         <p className="mt-0.5 text-sm text-white/50">
-          Closed roles disappear from the public careers page and the apply form.
+          Closed roles disappear from the public careers page and the apply form. After a
+          role&apos;s last date, it stays listed but only the status check is available.
         </p>
       </header>
 

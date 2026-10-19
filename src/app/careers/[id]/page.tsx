@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, MapPin, Briefcase, DollarSign, Calendar, Clock, Star } from "lucide-react";
+import { ArrowLeft, MapPin, Briefcase, DollarSign, Calendar, CalendarClock, Clock, Star } from "lucide-react";
 import Footer from "@/components/Footer";
-import { getJobById } from "@/lib/jobs/queries";
+import { getAllJobs, getJobById } from "@/lib/jobs/queries";
+import { formatDateOnly, isPastLastDate } from "@/lib/careers/dates";
+import { StatusCheck } from "../status-check";
 import { JobApplyButton } from "./apply-button";
 
 interface PageProps {
@@ -35,6 +37,16 @@ export default async function JobDetailsPage({ params }: PageProps) {
     return notFound();
   }
 
+  // Open = listed on the portal. Accepting = open AND last date not passed.
+  // After the last date only the status check remains.
+  const isOpen = job.status === "Open";
+  const accepting = isOpen && !isPastLastDate(job.last_date);
+  const statusJobs = isOpen
+    ? (await getAllJobs())
+        .filter((j) => j.status === "Open")
+        .map((j) => ({ id: j.id, title: j.title }))
+    : [];
+
   return (
     <>
       <main style={{ backgroundColor: "#000000", minHeight: "100vh", paddingTop: 100 }}>
@@ -42,7 +54,7 @@ export default async function JobDetailsPage({ params }: PageProps) {
           {/* Back Navigation */}
           <div className="mb-6">
             <Link
-              href="/jobs"
+              href="/careers"
               className="inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white transition-colors"
             >
               <ArrowLeft className="h-4 w-4" /> Back to open positions
@@ -64,9 +76,13 @@ export default async function JobDetailsPage({ params }: PageProps) {
                       <Star size={12} fill="currentColor" /> Featured
                     </span>
                   )}
-                  {job.status === "Open" ? (
+                  {accepting ? (
                     <span className="rounded bg-emerald-500/10 px-2.5 py-1 text-xs font-semibold text-emerald-400">
                       Open & Accepting Applications
+                    </span>
+                  ) : isOpen ? (
+                    <span className="rounded bg-red-500/10 px-2.5 py-1 text-xs font-semibold text-red-400">
+                      Applications Closed
                     </span>
                   ) : (
                     <span className="rounded bg-red-500/10 px-2.5 py-1 text-xs font-semibold text-red-400">
@@ -205,7 +221,7 @@ export default async function JobDetailsPage({ params }: PageProps) {
                       <span className="text-white font-medium">{job.salary}</span>
                     </div>
                   )}
-                  <div className="flex justify-between py-2">
+                  <div className="flex justify-between py-2 border-b border-white/5">
                     <span className="text-white/50">Posted Date</span>
                     <span className="text-white font-medium flex items-center gap-1">
                       <Calendar size={12} />
@@ -216,15 +232,38 @@ export default async function JobDetailsPage({ params }: PageProps) {
                       })}
                     </span>
                   </div>
+                  <div className="flex justify-between py-2">
+                    <span className="text-white/50">Last Date</span>
+                    <span
+                      className={`font-medium flex items-center gap-1 ${
+                        isOpen && !accepting ? "text-red-400" : "text-white"
+                      }`}
+                    >
+                      <CalendarClock size={12} />
+                      {job.last_date ? formatDateOnly(job.last_date) : "Open until filled"}
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              {/* Apply */}
+              {/* Apply / status */}
               <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 text-center">
-                {job.status === "Open" ? (
+                {accepting ? (
                   <>
                     <p className="text-white/80 font-semibold mb-3">Interested in this role?</p>
                     <JobApplyButton jobId={job.id} jobTitle={job.title} />
+                    <div className="mt-4 border-t border-white/5 pt-4">
+                      <p className="mb-2 text-xs text-white/50">Already applied?</p>
+                      <StatusCheck jobs={statusJobs} defaultJobId={job.id} variant="outline" />
+                    </div>
+                  </>
+                ) : isOpen ? (
+                  <>
+                    <p className="text-white/80 font-semibold mb-1">Applications Closed</p>
+                    <p className="text-xs text-white/50 mb-4">
+                      The last date to apply for this role has passed. If you applied, you can check your application status below.
+                    </p>
+                    <StatusCheck jobs={statusJobs} defaultJobId={job.id} variant="outline" />
                   </>
                 ) : (
                   <>

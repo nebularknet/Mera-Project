@@ -1,5 +1,6 @@
 import "server-only";
 import { Resend } from "resend";
+import { formatInterview } from "@/lib/careers/dates";
 
 // Created lazily: the Resend constructor throws when RESEND_API_KEY is unset,
 // which would break every module that imports this one. Without a key, emails
@@ -53,7 +54,8 @@ export function emailApplicationReceived(to: string, name: string, role: string)
       <p>Hi ${escapeHtml(name)},</p>
       <p>Thanks for applying for the <strong>${escapeHtml(role)}</strong> role at Nebulark.
          We've received your application and our team will review it shortly.</p>
-      <p>We'll be in touch by email with any updates.</p>
+      <p>You can check your application status at any time using the
+         "Check application status" option on our careers page.</p>
       <p>— The Nebulark Team</p>
     `,
   });
@@ -77,11 +79,35 @@ export function emailTeamNewApplication(name: string, role: string, email: strin
   });
 }
 
+/** Sent to the shared team inbox when a blog comment is waiting for approval. */
+export function emailTeamNewComment(name: string, postTitle: string, body: string) {
+  if (!NOTIFY) return Promise.resolve({ ok: false as const, error: "no notify address" });
+  return sendEmail({
+    to: NOTIFY,
+    subject: `New blog comment awaiting approval — ${postTitle}`,
+    html: `
+      <p><strong>${escapeHtml(name)}</strong> commented on <strong>${escapeHtml(postTitle)}</strong>:</p>
+      <blockquote>${escapeHtml(body.slice(0, 500))}</blockquote>
+      <p>Approve or delete it in the blog dashboard → Comments.</p>
+    `,
+  });
+}
+
 /** Sent to the applicant when a reviewer changes their status. */
-export function emailStatusChanged(to: string, name: string, role: string, status: string) {
+export function emailStatusChanged(
+  to: string,
+  name: string,
+  role: string,
+  status: string,
+  interviewAt?: string | null
+) {
   const friendly =
     status === "shortlisted"
-      ? "Good news — you've been shortlisted! Our team will reach out about next steps."
+      ? interviewAt
+        ? `Good news — you've been shortlisted! Your interview is scheduled for <strong>${escapeHtml(
+            formatInterview(interviewAt)
+          )}</strong>. You can also see this anytime with the "Check application status" option on our careers page.`
+        : "Good news — you've been shortlisted! Our team will reach out about next steps."
       : status === "rejected"
         ? "After careful review, we've decided not to move forward at this time. We genuinely appreciate your interest and wish you the best."
         : `Your application status has been updated to: ${status}.`;

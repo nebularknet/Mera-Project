@@ -2,6 +2,7 @@ import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Job } from "./types";
 import { applyFallback } from "./fallback";
+import { isDateOnly } from "@/lib/careers/dates";
 
 /**
  * The live `jobs` table uses the original careers schema
@@ -43,6 +44,7 @@ function normalize(row: JobRow): Job {
     benefits: list(row.benefits),
     featured: row.featured === true,
     status,
+    last_date: isDateOnly(row.last_date) ? row.last_date : null,
     created_at: row.created_at,
     updated_at: text(row.updated_at) || row.created_at,
   });

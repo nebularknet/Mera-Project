@@ -4,39 +4,9 @@
 export const config = {
   // Base URL for assets
   baseUrl: process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000",
-  
-  // Blog configuration
-  blogId: process.env.NEXT_PUBLIC_BLOG_ID || "clvlugru90000o4g8ahxp069s",
-  
-  // Blog categories
-  categories: [
-    {
-      label: "Foundation Model",
-      tag: "foundation-model",
-      description: "Insights on powerful AI models at the foundation of tech.",
-    },
-    {
-      label: "Engineering",
-      tag: "engineering",
-      description: "Innovative engineering driving AI advancements.",
-    },
-    {
-      label: "Jobs",
-      tag: "jobs",
-      description: "Explore AI job trends and opportunities shaping a brighter future.",
-    },
-    {
-      label: "Startups",
-      tag: "startup",
-      description: "Spotlight on innovative AI startups transforming industries.",
-    },
-    {
-      label: "Ethics",
-      tag: "ethics",
-      description: "Promoting responsible AI for positive impact.",
-    },
-  ],
-  
+
+  // Blog posts and categories live in Supabase (see src/lib/blog).
+
   // Main site configuration
   main: {
     url: process.env.NEXT_PUBLIC_SITE_URL || 'https://nebulark.net',

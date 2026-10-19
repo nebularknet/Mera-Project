@@ -110,8 +110,9 @@ export function ApplyForm({
         <CheckCircle2 className="mx-auto h-12 w-12 text-[#0dcaf0]" />
         <h2 className="mt-4 text-xl font-semibold text-white">Application submitted</h2>
         <p className="mx-auto mt-2 max-w-md text-sm text-white/60">
-          Thanks for applying! We&apos;ve emailed you a confirmation and our team
-          will review your application. You&apos;ll hear from us by email.
+          Thanks for applying! You can check the status of your application at
+          any time using the <span className="font-medium text-white">&ldquo;Check
+          application status&rdquo;</span> option on the job page.
         </p>
       </div>
     );

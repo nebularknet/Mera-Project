@@ -1,83 +1,81 @@
-export const revalidate = 60; // 1 minute
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
-import { BlogPostList } from "@/components/BlogPostList";
+import Footer from "@/components/Footer";
+import { FullWidthHeader } from "@/components/FullWidthHeader";
 import { PostPagination } from "@/components/PostPagination";
-import { wisp } from "@/lib/wisp";
-import { FilterBar } from "../../../components/FilterBar";
-import { FullWidthHeader } from "../../../components/FullWidthHeader";
-import { config } from "../../../config";
-import { Metadata } from "next";
+import { BlogToolbar } from "@/components/blog/BlogToolbar";
+import { PostGrid } from "@/components/blog/PostCard";
+import { getCategories, getCategoryBySlug, listPublishedPosts } from "@/lib/blog/queries";
 import { getOgImageUrl } from "@/lib/ogImage";
 
-export async function generateMetadata(
-  props: {
-    params: Promise<{ tag: string }>;
-  }
-): Promise<Metadata> {
-  const params = await props.params;
+export const dynamic = "force-dynamic";
 
-  const {
-    tag
-  } = params;
+type Params = Promise<{ tag: string }>;
+type SearchParams = Promise<{ page?: string }>;
 
-  return {
-    title: `Blog posts tagged with #${tag}`,
-    description: `List of all blog posts on ${config.main.title} tagged with #${tag}`,
-    openGraph: {
-      title: `Blog posts tagged with #${tag}`,
-      description: `List of all blog posts on ${config.main.title} tagged with #${tag}`,
-      images: [getOgImageUrl(`#${tag}`)],
-    },
-  };
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const { tag } = await params;
+  const category = await getCategoryBySlug(tag);
+  if (!category) return { title: "Category not found — Nebulark Blog" };
+  const title = `${category.name} — Nebulark Blog`;
+  const description = category.description || `Articles about ${category.name} from the Nebulark team.`;
+  return { title, description, openGraph: { title, description, images: [getOgImageUrl(title)] } };
 }
 
-export default async function Page(
-  props: {
-    searchParams?: Promise<{ query: string; page: string }>;
-    params: Promise<{ tag: string }>;
-  }
-) {
-  const params = await props.params;
+export default async function CategoryPage({
+  params,
+  searchParams,
+}: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
+  const { tag } = await params;
+  const sp = await searchParams;
+  const page = Math.max(1, parseInt(sp.page ?? "1", 10) || 1);
 
-  const {
-    tag
-  } = params;
+  const category = await getCategoryBySlug(tag);
+  if (!category) notFound();
 
-  const searchParams = await props.searchParams;
-  const category = config.categories.find((c) => c.tag === tag);
-  const { label, description } = category || {
-    label: `#${tag}`,
-    description: `Blog posts tagged with #${tag}`,
-  };
-  const page = searchParams?.page ? parseInt(searchParams.page) : 1;
-  const result = await wisp.getPosts({
-    limit: 6,
-    tags: [tag],
-    query: searchParams?.query,
-    page,
-  });
+  const [categories, { posts, pagination }] = await Promise.all([
+    getCategories(),
+    listPublishedPosts({ page, limit: 9, categorySlug: category.slug }),
+  ]);
 
   return (
-    <div className="pt-20 blog-page">
-      <FullWidthHeader
-        title={label}
-        description={description}
-        breadcrumb={[
-          { label: "Home", href: "/" },
-          { label: "Category", href: `/category/` },
-          { label, href: `/category/${tag}` },
-        ]}
-      />
-      <div className="container mx-auto max-w-6xl">
-        <FilterBar active={tag} className="my-8 blog-filter" />
-        <BlogPostList posts={result.posts} />
-        <PostPagination
-          pagination={result.pagination}
-          className="my-16 blog-pagination"
-          query={searchParams?.query}
-          basePath={`/category/${tag}`}
+    <>
+      <div className="blog-page pt-20">
+        <FullWidthHeader
+          title={category.name}
+          description={category.description ?? ""}
+          breadcrumb={[
+            { label: "Blog", href: "/blog" },
+            { label: "Categories", href: "/category" },
+            { label: category.name, href: `/category/${category.slug}` },
+          ]}
         />
+        <div className="container mx-auto max-w-6xl px-4 pb-16">
+          <BlogToolbar
+            categories={categories.filter((c) => c.postCount > 0 || c.slug === category.slug)}
+            activeSlug={category.slug}
+          />
+          <div className="mt-8">
+            {posts.length > 0 ? (
+              <PostGrid posts={posts} />
+            ) : (
+              <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] px-6 py-16 text-center text-lg text-white/70">
+                No articles in this category yet.
+              </div>
+            )}
+          </div>
+          <PostPagination
+            pagination={pagination}
+            className="mt-14 blog-pagination"
+            basePath={`/category/${category.slug}`}
+          />
+        </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 }

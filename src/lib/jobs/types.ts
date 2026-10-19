@@ -12,6 +12,7 @@ export interface Job {
   benefits: string[];
   featured: boolean;
   status: 'Open' | 'Closed';
+  last_date: string | null; // YYYY-MM-DD, last day applications are accepted
   created_at: string;
   updated_at: string;
 }

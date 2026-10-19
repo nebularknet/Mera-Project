@@ -19,6 +19,12 @@ const triggerCls =
   "h-9 border-white/10 bg-[#121212] text-white data-[placeholder]:text-white/40 focus:ring-[#0dcaf0]/50";
 const contentCls = "border-white/10 bg-[#121212] text-white";
 const itemCls = "focus:bg-white/10 focus:text-white";
+// Wide enough for the date text plus the native calendar icon, which is made
+// clearly visible on the dark background.
+const dateCls =
+  "h-9 w-[10rem] !px-2.5 border-white/10 bg-[#121212] text-white [color-scheme:dark] focus-visible:ring-[#0dcaf0]/50 " +
+  "[&::-webkit-calendar-picker-indicator]:ml-1 [&::-webkit-calendar-picker-indicator]:cursor-pointer " +
+  "[&::-webkit-calendar-picker-indicator]:opacity-80 hover:[&::-webkit-calendar-picker-indicator]:opacity-100";
 
 const ALL = "__all__";
 
@@ -62,12 +68,14 @@ export function FiltersBar({
   return (
     <div className="flex flex-wrap items-center gap-2">
       <div className="relative">
-        <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
+        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
+        {/* px-[0.75rem] replaces the base `px-3` class, which Bootstrap also defines
+            (with !important) and would push the text under the icon. */}
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search name or email"
-          className="h-9 w-56 border-white/10 bg-[#121212] pl-8 text-white placeholder:text-white/40 focus-visible:ring-[#0dcaf0]/50"
+          className="h-9 w-60 border-white/10 bg-[#121212] px-[0.75rem] pl-9 text-white placeholder:text-white/40 focus-visible:ring-[#0dcaf0]/50"
         />
       </div>
 
@@ -101,20 +109,23 @@ export function FiltersBar({
 
       {/* Applied date range */}
       <div className="flex items-center gap-1.5">
+        <span className="text-xs text-white/45">Applied</span>
         <Input
           type="date"
           aria-label="Applied from"
+          title="Applied from"
           value={params.get("dateFrom") ?? ""}
           onChange={(e) => setParam("dateFrom", e.target.value)}
-          className="h-9 w-[8.5rem] border-white/10 bg-[#121212] text-white [color-scheme:dark] focus-visible:ring-[#0dcaf0]/50"
+          className={dateCls}
         />
         <span className="text-white/40">–</span>
         <Input
           type="date"
           aria-label="Applied to"
+          title="Applied to"
           value={params.get("dateTo") ?? ""}
           onChange={(e) => setParam("dateTo", e.target.value)}
-          className="h-9 w-[8.5rem] border-white/10 bg-[#121212] text-white [color-scheme:dark] focus-visible:ring-[#0dcaf0]/50"
+          className={dateCls}
         />
       </div>
 
