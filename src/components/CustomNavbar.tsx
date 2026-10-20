@@ -51,6 +51,8 @@ const CustomNavbar: React.FC = () => {
 
   const homeCls = (section: HomeSection) =>
     `nav-link-custom ${onHome && activeSection === section ? 'active' : ''}`;
+  // Posts and category pages are part of the blog too.
+  const blogCls = `nav-link-custom ${/^\/(blog|post|category)(\/|$)/.test(pathname ?? '') ? 'active' : ''}`;
   const routeCls = (prefix: string) =>
     `nav-link-custom ${pathname?.startsWith(prefix) ? 'active' : ''}`;
 
@@ -84,7 +86,7 @@ const CustomNavbar: React.FC = () => {
             <Nav.Link href="/academy" className={routeCls('/academy')}>
               Academy
             </Nav.Link>
-            <Nav.Link href="/blog" className={routeCls('/blog')}>
+            <Nav.Link href="/blog" className={blogCls}>
               Blog
             </Nav.Link>
             <Nav.Link href="/careers" className={routeCls('/careers')}>

@@ -128,7 +128,8 @@ export async function setJobLastDate(jobId: string, lastDate: string): Promise<A
     return { ok: false, error: lastDateError(error.message) };
   }
   revalidatePath("/careers/admin/jobs");
-  revalidatePath("/careers");
+  // Every careers page: listing, each role page, the dashboard and its filters.
+  revalidatePath("/careers", "layout");
   return { ok: true };
 }
 
@@ -167,7 +168,8 @@ export async function toggleJobOpen(
     return { ok: false, error: "Could not update the role." };
   }
   revalidatePath("/careers/admin/jobs");
-  revalidatePath("/careers");
+  // Every careers page: listing, each role page, the dashboard and its filters.
+  revalidatePath("/careers", "layout");
   return { ok: true };
 }
 
@@ -206,7 +208,8 @@ export async function createJob(formData: FormData): Promise<ActionResult> {
     };
   }
   revalidatePath("/careers/admin/jobs");
-  revalidatePath("/careers");
+  // Every careers page: listing, each role page, the dashboard and its filters.
+  revalidatePath("/careers", "layout");
   return { ok: true };
 }
 

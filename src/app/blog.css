@@ -571,3 +571,15 @@
 .blog-admin a {
   text-decoration: none;
 }
+
+/* Public blog: Bootstrap makes every link blue + underlined. Point its link
+   colour at white/cyan, and drop the underline with low specificity so
+   Tailwind classes (text-*, hover:underline) and article links still win. */
+.blog-page {
+  --bs-link-color-rgb: 255, 255, 255;
+  --bs-link-hover-color-rgb: 13, 202, 240;
+}
+
+.blog-page :where(a) {
+  text-decoration: none;
+}

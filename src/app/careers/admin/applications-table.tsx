@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import {
   FileText,
   ClipboardList,
@@ -92,8 +93,15 @@ export function ApplicationsTable({ rows }: { rows: Row[] }) {
 
 function ApplicationRow({ row }: { row: Row }) {
   const { toast } = useToast();
+  const router = useRouter();
   const [status, setStatus] = React.useState<ApplicationStatus>(row.status);
   const [interviewAt, setInterviewAt] = React.useState<string | null>(row.interview_at);
+
+  // Keep in sync when the server sends fresh data (after refresh).
+  React.useEffect(() => {
+    setStatus(row.status);
+    setInterviewAt(row.interview_at);
+  }, [row.status, row.interview_at]);
   const [pending, setPending] = React.useState<ApplicationStatus | null>(null);
   const [cvLoading, setCvLoading] = React.useState(false);
   const [detailsOpen, setDetailsOpen] = React.useState(false);
@@ -108,6 +116,8 @@ function ApplicationRow({ row }: { row: Row }) {
       setStatus(next);
       setInterviewAt(next === "shortlisted" ? (when ?? null) : null);
       toast({ title: `Marked ${next}`, description: `${row.full_name} — emailed.` });
+      // Reload the statistics, filtered list and counts from the server.
+      router.refresh();
       return true;
     }
     toast({ title: "Couldn't update", description: res.error, variant: "destructive" });

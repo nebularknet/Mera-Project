@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import { Plus, Loader2 } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -32,6 +33,9 @@ export function JobsManager({ jobs }: { jobs: Job[] }) {
   const [creating, setCreating] = React.useState(false);
   const [togglingId, setTogglingId] = React.useState<string | null>(null);
   const [savingDateId, setSavingDateId] = React.useState<string | null>(null);
+  // Bumped when a save fails, so the date field snaps back to the stored value.
+  const [dateResets, setDateResets] = React.useState(0);
+  const router = useRouter();
   const today = todayDateKey();
 
   async function onCreate(e: React.FormEvent<HTMLFormElement>) {
@@ -42,6 +46,7 @@ export function JobsManager({ jobs }: { jobs: Job[] }) {
     if (res.ok) {
       formRef.current?.reset();
       toast({ title: "Role created" });
+      router.refresh();
     } else {
       toast({ title: "Couldn't create", description: res.error, variant: "destructive" });
     }
@@ -54,8 +59,10 @@ export function JobsManager({ jobs }: { jobs: Job[] }) {
     const res = await setJobLastDate(job.id, value);
     setSavingDateId(null);
     if (res.ok) {
-      toast({ title: value ? "Last date saved" : "Last date removed", description: job.title });
+      toast({ title: value ? "Closing date saved" : "Closing date removed", description: job.title });
+      router.refresh();
     } else {
+      setDateResets((n) => n + 1);
       toast({ title: "Couldn't save", description: res.error, variant: "destructive" });
     }
   }
@@ -64,9 +71,8 @@ export function JobsManager({ jobs }: { jobs: Job[] }) {
     setTogglingId(job.id);
     const res = await toggleJobOpen(job.id, !job.is_open);
     setTogglingId(null);
-    if (!res.ok) {
-      toast({ title: "Couldn't update", description: res.error, variant: "destructive" });
-    }
+    if (res.ok) router.refresh();
+    else toast({ title: "Couldn't update", description: res.error, variant: "destructive" });
   }
 
   return (
@@ -176,6 +182,7 @@ export function JobsManager({ jobs }: { jobs: Job[] }) {
                       type="date"
                       aria-label={`Last date for ${job.title}`}
                       title="Last date to apply (clear for no deadline)"
+                      key={`${job.last_date ?? "none"}-${dateResets}`}
                       defaultValue={job.last_date ?? ""}
                       disabled={savingDateId === job.id}
                       onChange={(e) => onLastDate(job, e.target.value)}
