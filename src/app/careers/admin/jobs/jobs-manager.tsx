@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Loader2 } from "lucide-react";
+import { Plus, Loader2, CheckCircle2 } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -31,6 +31,8 @@ export function JobsManager({ jobs }: { jobs: Job[] }) {
   const { toast } = useToast();
   const formRef = React.useRef<HTMLFormElement>(null);
   const [creating, setCreating] = React.useState(false);
+  // Title of the role just added, shown as a confirmation under the form.
+  const [added, setAdded] = React.useState<string | null>(null);
   const [togglingId, setTogglingId] = React.useState<string | null>(null);
   const [savingDateId, setSavingDateId] = React.useState<string | null>(null);
   // Bumped when a save fails, so the date field snaps back to the stored value.
@@ -40,12 +42,16 @@ export function JobsManager({ jobs }: { jobs: Job[] }) {
 
   async function onCreate(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    const title = String(fd.get("title") ?? "").trim();
     setCreating(true);
-    const res = await createJob(new FormData(e.currentTarget));
+    setAdded(null);
+    const res = await createJob(fd);
     setCreating(false);
     if (res.ok) {
       formRef.current?.reset();
-      toast({ title: "Role created" });
+      setAdded(title);
+      toast({ title: "Role added", description: `"${title}" is now live on the careers page.` });
       router.refresh();
     } else {
       toast({ title: "Couldn't create", description: res.error, variant: "destructive" });
@@ -145,6 +151,11 @@ export function JobsManager({ jobs }: { jobs: Job[] }) {
           )}
           Add role
         </Button>
+        {added && (
+          <p className="mt-3 inline-flex items-center gap-1.5 rounded-md bg-emerald-400/10 px-3 py-2 text-sm text-emerald-300">
+            <CheckCircle2 className="h-4 w-4" /> &ldquo;{added}&rdquo; was added and is now listed below and on the careers page.
+          </p>
+        )}
       </form>
 
       {/* Existing roles */}
@@ -171,9 +182,6 @@ export function JobsManager({ jobs }: { jobs: Job[] }) {
               <tr key={job.id} className="border-b border-white/5 last:border-0">
                 <td className="px-4 py-3">
                   <span className="font-medium text-white">{job.title}</span>
-                  {job.description && (
-                    <span className="mt-0.5 line-clamp-1 block max-w-md text-xs text-white/45">{job.description}</span>
-                  )}
                 </td>
                 <td className="px-4 py-3 text-white/70">{job.location ?? "—"}</td>
                 <td className="px-4 py-3">

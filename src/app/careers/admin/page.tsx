@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Briefcase, Users, Clock, CheckCircle2, XCircle } from "lucide-react";
+import { Briefcase, Users, Clock, CheckCircle2, XCircle, Newspaper, ShieldCheck } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+
+const headerBtn =
+  "inline-flex items-center gap-1.5 rounded-md border border-white/10 px-3 py-1.5 text-sm text-white/70 no-underline transition-colors hover:bg-white/10 hover:text-white";
 
 import { getAdminEmail } from "@/lib/auth/session";
 import {
@@ -84,12 +87,15 @@ export default async function AdminDashboard({
             </h1>
             <p className="mt-0.5 text-sm text-white/50">Signed in as {email}</p>
           </div>
-          <div className="flex items-center gap-2">
-            <Link
-              href="/careers/admin/jobs"
-              className="inline-flex items-center gap-1.5 rounded-md border border-white/10 px-3 py-1.5 text-sm text-white/70 transition-colors hover:bg-white/10 hover:text-white"
-            >
+          <div className="flex flex-wrap items-center gap-2">
+            <Link href="/careers/admin/blog" className={headerBtn}>
+              <Newspaper className="h-4 w-4" /> Manage Blog
+            </Link>
+            <Link href="/careers/admin/jobs" className={headerBtn}>
               <Briefcase className="h-4 w-4" /> Manage roles
+            </Link>
+            <Link href="/careers/admin/admins" className={headerBtn}>
+              <ShieldCheck className="h-4 w-4" /> Manage Admins
             </Link>
             <SignOutButton />
           </div>

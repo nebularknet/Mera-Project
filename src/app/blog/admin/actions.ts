@@ -14,6 +14,7 @@ import {
   slugify,
 } from "@/lib/blog/content";
 import type { PostStatus } from "@/lib/blog/types";
+import { uniqueSlug } from "@/lib/blog/posts";
 
 export type ActionResult<T = object> = ({ ok: true } & T) | { ok: false; error: string };
 
@@ -185,14 +186,6 @@ export async function savePost(
   }
   revalidateBlog(slug);
   return { ok: true, id: created.id as string, slug, status };
-}
-
-async function uniqueSlug(base: string, ownId?: string) {
-  const db = createAdminClient();
-  const { data } = await db.from("blog_posts").select("id, slug").like("slug", `${base}%`);
-  const taken = new Set((data ?? []).filter((r) => r.id !== ownId).map((r) => r.slug as string));
-  if (!taken.has(base)) return base;
-  for (let i = 2; ; i++) if (!taken.has(`${base}-${i}`)) return `${base}-${i}`;
 }
 
 export async function deletePost(id: string): Promise<ActionResult> {

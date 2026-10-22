@@ -4,7 +4,7 @@ export type CommentStatus = "pending" | "approved";
 
 export type Author = {
   id: string;
-  email: string;
+  email: string | null; // null = display-only author (no login)
   name: string;
   bio: string | null;
   avatar_url: string | null;

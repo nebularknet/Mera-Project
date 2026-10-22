@@ -16,7 +16,8 @@ export default async function BlogWritersPage() {
   const user = await requireBlogUser({ adminOnly: true });
   const db = createAdminClient();
   const [{ data: authors }, { data: posts }] = await Promise.all([
-    db.from("blog_authors").select("id, name, email, role, active, created_at").order("created_at"),
+    // Only people with a login; display-only author names (no email) aren't writers.
+    db.from("blog_authors").select("id, name, email, role, active, created_at").not("email", "is", null).order("created_at"),
     db.from("blog_posts").select("author_id, status"),
   ]);
   const counts = new Map<string, { total: number; published: number }>();
