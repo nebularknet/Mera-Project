@@ -24,6 +24,18 @@ export const applicationSchema = z.object({
   startDate: z.string().regex(/^\d{4}-\d{2}$/, "Enter a valid start month."),
   endDate: z.string().regex(/^\d{4}-\d{2}$/, "Enter a valid end month."),
   city: z.string().trim().min(2, "City is required.").max(120),
+  dob: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Enter your date of birth.")
+    .refine((v) => {
+      const d = new Date(`${v}T00:00:00Z`);
+      return !Number.isNaN(d.getTime()) && d <= new Date() && d.getUTCFullYear() >= 1940;
+    }, "Enter a valid date of birth."),
+  cnic: z
+    .string()
+    .trim()
+    .regex(/^\d{5}-?\d{7}-?\d$/, "Enter a valid 13-digit CNIC (e.g. 35202-1234567-1).")
+    .transform((v) => v.replace(/-/g, "").replace(/^(\d{5})(\d{7})(\d)$/, "$1-$2-$3")),
   email: z.string().trim().email("Enter a valid email address."),
   contact: z.string().trim().min(7, "Enter a valid contact number.").max(20),
   experience: z.string().trim().max(2000).optional().or(z.literal("")),

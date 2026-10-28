@@ -40,6 +40,8 @@ type Row = Pick<
   | "start_date"
   | "end_date"
   | "city"
+  | "dob"
+  | "cnic"
   | "experience"
   | "cv_path"
   | "status"
@@ -266,6 +268,8 @@ function DetailsDialog({
           <Detail label="Contact number" value={row.contact} />
           <Detail label="City" value={row.city} />
           <Detail label="Gender" value={row.gender} />
+          <Detail label="Date of birth" value={row.dob ? formatDate(`${row.dob}T00:00:00`) : "—"} />
+          <Detail label="CNIC number" value={row.cnic ?? "—"} />
           <Detail label="Education" value={row.education} />
           <Detail label="University" value={row.university} />
           <Detail label="Degree period" value={`${formatMonth(row.start_date)} – ${formatMonth(row.end_date)}`} />

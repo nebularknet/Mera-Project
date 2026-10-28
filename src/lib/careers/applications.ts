@@ -12,6 +12,8 @@ export type Application = {
   start_date: string;
   end_date: string;
   city: string;
+  dob: string | null; // YYYY-MM-DD; null for applications submitted before this field existed
+  cnic: string | null;
   email: string;
   contact: string;
   experience: string | null;
@@ -82,7 +84,13 @@ export async function getApplications(
     };
     const app = rest as Omit<Application, "job_title">;
     // interview_at is absent until the migration runs; normalize to null.
-    return { ...app, interview_at: app.interview_at ?? null, job_title: jobs?.title ?? null };
+    return {
+      ...app,
+      dob: app.dob ?? null,
+      cnic: app.cnic ?? null,
+      interview_at: app.interview_at ?? null,
+      job_title: jobs?.title ?? null,
+    };
   });
 }
 

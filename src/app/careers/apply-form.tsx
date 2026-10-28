@@ -47,7 +47,7 @@ const STEPS = ["Position", "About you", "Education & CV"];
 // Fields validated before leaving each step (CV is checked at final submit).
 const STEP_FIELDS: (keyof ApplicationInput)[][] = [
   ["jobId"],
-  ["fullName", "gender", "email", "contact", "city"],
+  ["fullName", "gender", "dob", "cnic", "email", "contact", "city"],
   ["education", "university", "startDate", "endDate"],
 ];
 
@@ -76,6 +76,8 @@ export function ApplyForm({
       startDate: "",
       endDate: "",
       city: "",
+      dob: "",
+      cnic: "",
       email: "",
       contact: "",
       experience: "",
@@ -248,6 +250,43 @@ export function ApplyForm({
                       <SelectItem value="Female" className={itemCls}>Female</SelectItem>
                     </SelectContent>
                   </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="dob"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={labelCls}>Date of Birth *</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="date"
+                      max={new Date().toISOString().slice(0, 10)}
+                      className={`${fieldCls} [color-scheme:dark]`}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="cnic"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={labelCls}>CNIC Number *</FormLabel>
+                  <FormControl>
+                    <Input
+                      inputMode="numeric"
+                      placeholder="xxxxx-xxxxxxx-x"
+                      maxLength={15}
+                      className={fieldCls}
+                      {...field}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
